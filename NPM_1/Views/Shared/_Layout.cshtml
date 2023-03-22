@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+
+    @*Adding Codde from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_dropdown_navbar*@
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .myNav_navbar {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+            .myNav_navbar a {
+                float: left;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+        .myNav_dropdown {
+            float: left;
+            overflow: hidden;
+        }
+
+            .myNav_dropdown .myNav_dropbtn {
+                font-size: 16px;
+                border: none;
+                outline: none;
+                color: white;
+                padding: 14px 16px;
+                background-color: inherit;
+                font-family: inherit;
+                margin: 0;
+            }
+
+            .myNav_navbar a:hover, .myNav_dropdown:hover .myNav_dropbtn {
+                background-color: red;
+            }
+
+        .myNav_dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .myNav_dropdown-content a {
+                float: none;
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                text-align: left;
+            }
+
+                .myNav_dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+
+        .myNav_dropdown:hover .myNav_dropdown-content {
+            display: block;
+        }
+    </style>
+
+
+
+
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("NPM", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+ 
+                
+                    @*<a>@Html.ActionLink("Reports", "NUR", "Reports")</a>
+                    <a>@Html.ActionLink("About", "About", "Home")</a>
+                    <a>@Html.ActionLink("Contact", "Contact", "Home")</a>*@
+
+       
+
+            @*Adding Div of NavBar from  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_dropdown_navbar*@ 
+            <div class="myNav_navbar">
+                <a>@Html.ActionLink("Home", "Index", "Home")</a>
+               
+                <div class="myNav_dropdown">
+                    <button class="myNav_dropbtn">
+                        Reports
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="myNav_dropdown-content">
+                        @*<a href="#">Link 1</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>*@
+
+                        <a>@Html.ActionLink("NUR", "NUR", "Reports")</a>
+                        <a>@Html.ActionLink("SMS", "SMS", "Reports")</a>
+
+                    </div>
+                </div>
+                <a>@Html.ActionLink("Contarct", "Contract_KPI", "Contract")</a>
+                <a>@Html.ActionLink("WLL", "WLL_KPI", "WLL")</a>
+                <a>@Html.ActionLink("TXPO", "TXPO_Measurements", "TXPO")</a>
+                <a>@Html.ActionLink("WPC", "WPC_KPI", "WPC")</a>
+                <a>@Html.ActionLink("About", "About", "Home")</a>
+                <a>@Html.ActionLink("Contact", "Contact", "Home")</a>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+
+
+
+
+
+@*<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+            .navbar a {
+                float: left;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+        .dropdown {
+            float: left;
+            overflow: hidden;
+        }
+
+            .dropdown .dropbtn {
+                font-size: 16px;
+                border: none;
+                outline: none;
+                color: white;
+                padding: 14px 16px;
+                background-color: inherit;
+                font-family: inherit;
+                margin: 0;
+            }
+
+            .navbar a:hover, .dropdown:hover .dropbtn {
+                background-color: red;
+            }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                float: none;
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                text-align: left;
+            }
+
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>
+                @Html.ActionLink("Reports", "NUR", "Reports")
+
+            <div class="dropdown">
+                <button class="dropbtn">
+                        Reports
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                <div class="dropdown-content">
+                    <a href="#">NUR</a>
+                    <a href="#">SMS</a>
+
+                </div>
+            </div>
+
+        </li>
+        <li>@Html.ActionLink("About", "About", "Home")</li>
+        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+    </ul>
+</div>
+
+    <h3>Dropdown Menu inside a Navigation Bar</h3>
+    <p>Hover over the "Dropdown" link to see the dropdown menu.</p>
+
+</body>
+</html>*@

@@ -1,0 +1,542 @@
+﻿@*Ajax JQuary for Load Data into DataBase*@
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<link rel="stylesheet" href="~/Content/bootstrap.min.css">
+<br />
+<script>
+
+
+    //$(document).ready(function () {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/WLL/getDataInterval",
+    //        data: "{}",
+    //        success: function (data) {
+    //            var s = '<option value="-1">Please Select an Interval</option>';
+    //            for (var i = 0; i < data.length; i++) {
+    //                s += '<option value="' + '">' + data[i].IntervalName + '</option>';
+    //            }
+    //            $("#dropdown_DataInterval").html(s);
+    //        }
+    //    });
+    //});
+
+
+    // Province Combobox
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/WLL/getProvince",
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Please Select a Province</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + '">' + data[i].ProvinceName + '</option>';
+                }
+                $("#dropdown_province").html(s);
+            }
+        });
+    });
+
+    // BSC Combobox
+    //$(document).ready(function () {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/WLL/getBSC",
+    //        data: "{}",
+    //        success: function (data) {
+    //            var s = '<option value="-1">Please Select a Node</option>';
+    //            for (var i = 0; i < data.length; i++) {
+    //                s += '<option value="' + '">' + data[i].BSCName + '</option>';
+    //            }
+    //            $("#dropdown_bsc").html(s);
+    //        }
+    //    });
+    //});
+
+
+    // Cell Combobox
+    //$(document).ready(function () {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/WLL/getCell",
+    //        data: "{}",
+    //        success: function (data) {
+    //            var s = '<option value="-1">Please Select a Cell</option>';
+    //            for (var i = 0; i < data.length; i++) {
+    //                s += '<option value="' + '">' + data[i].CellName + '</option>';
+    //            }
+    //            $("#dropdown_cell").html(s);
+
+    //        }
+    //    });
+    //});
+
+
+    // KPI Combobox
+    //$(document).ready(function () {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/WLL/getKPI",
+    //        data: "{}",
+    //        success: function (data) {
+    //            var s = '<option value="-1">Please Select a KPI</option>';
+    //            for (var i = 0; i < data.length; i++) {
+    //                s += '<option value="' + '">' + data[i].KPIName + '</option>';
+    //            }
+    //            $("#dropdown_kpi").html(s);
+    //        }
+    //    });
+    //});
+
+
+
+
+
+
+
+    //function upload() {
+
+    //    if ($("#fileID").val() == '') {
+    //        alert('Please select a file.');
+    //        return false;
+    //    }
+    //    $("#txtName").val("");
+
+    //    var formData = new FormData();
+    //    var file = document.getElementById("fileID").files[0];
+    //    formData.append("MyFile", file);
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: 'Index_Post',
+    //        data: formData,
+    //        dataType: 'json',
+    //        contentType: false,
+    //        processData: false,
+    //        cache: false,
+    //        success: function (response) {
+    //            var myhtml = '';
+    //            if (response.success) {
+    //                $("#txtName").val("KPI is uploaded");
+    //                myhtml = '<div class="alert alert-success">' + response.responseMessage + '</div>';
+    //            }
+    //            else {
+    //                myhtml = '<div class="alert alert-danger">' + response.responseMessage + '</div>';
+    //            }
+    //            $("#myAlert").html(myhtml);
+    //            $("#myAlert").fadeIn(500).delay(3000).fadeOut(500);
+    //        },
+    //        error: function (error) {
+    //            $("#myAlert").html('<div class="alert alert-danger">' + error + '</div>');
+    //        }
+    //    });
+    //};
+
+
+
+</script>
+
+
+@*@Html.TextBox("fileID", "", new { type = "file" })*@
+@*<br />*@
+
+
+@*<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        <input type="submit" onclick="upload()" class="btn btn-secondary" value="Upload KPI" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <input type="text" id="txtName" />
+    </div>
+</div>*@
+
+
+@*<br />*@
+
+
+
+<div style="height: 850px; width: 1580px; background-color: #CCCCCC; margin-right: 67px; margin-top: 0px;">
+    <div style="height: 100px; width: 1550px; background-color: #99FF99; position: relative; top: 14px; left: 16px;">
+
+        @Html.Label("Province:")
+        <select id="dropdown_DataInterval" name="dropdown_DataInterval">
+            <option value="Select">Please Select an Interval</option>
+            <option value="Daily">Daily</option>
+            <option value="BH">BH</option>
+        </select>
+        <br />
+        <br />
+
+        @Html.Label("Site Code:")
+        <select id="dropdown_province" name="dropdown_province"></select>
+
+        <br />
+        <br />
+        <br />
+       
+
+        @*@Html.Label("Site:")
+        <select id="dropdown_bsc" name="dropdown_bsc"></select>
+
+        <br />
+
+        @Html.Label("Cell:")
+        <select id="dropdown_cell" name="dropdown_cell"></select>
+
+        <br />
+        @Html.Label("KPI:")
+        <select id="dropdown_kpi" name="dropdown_kpi"></select>*@
+
+
+        @* Table*@
+        @*</div>
+        <div style="height: 230px; width: 473px; background-color: #66ffe8; position: relative; top: 30px; left: 16px;">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">item1</th>
+                        <th scope="col">item2</th>
+                        <th scope="col">item3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>23</td>
+                        <td>34</td>
+                        <td>67</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>12</td>
+                        <td>67</td>
+                        <td>89</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>98</td>
+                        <td>77</td>
+                        <td>34</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>*@
+
+        @*<div style="height: 473px; width: 473px; background-color: #b6ff00; position: relative; top: 50px; left: 16px;">*@
+
+        <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+        <style>
+            .map {
+                /*        height: 473px;
+                width: 100%;*/
+                height: 700px;
+                width: 1550px;
+            }
+        </style>
+        <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+
+        <div id="map" class="map"></div>
+        <script type="text/javascript">
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    })
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([55, 33]),
+                    zoom: 6
+                })
+            });
+        </script>
+    </div>
+
+
+
+
+
+    @*<div style="width: 1075px; height: 600px; background-color: #FFCC66; position: relative; top: -790px; left: 513px;">*@
+
+        @{
+            Layout = null;
+        }
+
+
+        <html>
+        <head>
+            <script type="text/javascript">
+
+
+                $('#dropdown_province').change(SendTextIntervalProvince);
+                function SendTextIntervalProvince() {
+
+                    $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
+                    var interval_text = $("#dropdown_DataInterval option:selected").text();
+
+                    $("#txtName2").val($("#dropdown_province option:selected").text());
+                    var province_text = $("#dropdown_province option:selected").text();
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'dropdown_provincePost_Node',
+                        data: { text: interval_text + "/" + province_text },
+
+                        data1: "{}",
+                        success: function (data1) {
+                            var s = '<option value="-1">Please Select a Node</option>';
+                            for (var i = 0; i < data1.length; i++) {
+                                s += '<option value="' + '">' + data1[i].BSCName + '</option>';
+                            }
+                            $("#dropdown_bsc").html(s);
+                        }
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'dropdown_provincePost_Cell',
+                        data: { text: interval_text+"/"+province_text },
+
+                        data1: "{}",
+                        success: function (data1) {
+                            var s = '<option value="-1">Please Select a Cell</option>';
+                            for (var i = 0; i < data1.length; i++) {
+                                s += '<option value="' + '">' + data1[i].CellName + '</option>';
+                            }
+                            $("#dropdown_cell").html(s);
+                        }
+                    });
+
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'dropdown_provincePost_KPI',
+                        data: { text: interval_text + "/" + province_text },
+
+                        data1: "{}",
+                        success: function (data1) {
+                            var s = '<option value="-1">Please Select a KPI</option>';
+                            for (var i = 0; i < data1.length; i++) {
+                                s += '<option value="' + '">' + data1[i].KPIName + '</option>';
+                            }
+                            $("#dropdown_kpi").html(s);
+                        }
+                    });
+
+
+
+                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                    var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'dropdown_provincePost',
+                        data: { text: interval_text + "/" + province_text + "|" + kpi_text },
+                        success: function (data) {
+                            if (data.success)
+                                Plot(data.result);
+                        }
+                    });
+
+
+                    function Plot(data1) {
+                        $("#txtName1").val($("#dropdown_cell option:selected").text());
+                        var cell_text = $("#dropdown_cell option:selected").text();
+
+                        $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                        var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                        var chart = new CanvasJS.Chart("chartContainer", {
+                            animationEnabled: true,
+                            title: {
+                                text: province_text
+                            },
+                            axisX: {
+                                valueFormatString: "DD MMM YYYY"
+                            },
+                            axisY: {
+                                title: kpi_text,
+                                //prefix: "%",
+                                includeZero: true
+                            },
+                            data: [{
+                                type: "line",
+                                name: "B442W",
+                                xValueType: "dateTime",
+                                yValueFormatString: "#,##0.##",
+                                xValueFormatString: "DD MMM YYYY",
+                                dataPoints: data1,
+                            }]
+                        });
+                        chart.render();
+                    };
+
+
+
+
+                }
+
+
+
+
+
+                $('#dropdown_kpi').change(plot1);
+                function plot1() {
+
+
+                    $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
+                    var interval_text = $("#dropdown_DataInterval option:selected").text();
+
+                    $("#txtName2").val($("#dropdown_province option:selected").text());
+                    var province_text = $("#dropdown_province option:selected").text();
+
+                    $("#txtName3").val($("#dropdown_cell option:selected").text());
+                    var cell_text = $("#dropdown_cell option:selected").text();
+
+                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                    var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'dropdown_kpiPost',
+                        data: { text: interval_text + "/" + province_text + "|" + kpi_text },
+                        success: function (data) {
+                            if (data.success)
+                                Plot(data.result);
+                        }
+                    });
+                }
+
+                function Plot1(data1) {
+                    $("#txtName2").val($("#dropdown_province option:selected").text());
+                    var province_text = $("#dropdown_province option:selected").text();
+
+                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                    var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        animationEnabled: true,
+                        title: {
+                            text: province_text
+                        },
+                        axisX: {
+                            valueFormatString: "DD MMM YYYY"
+                        },
+                        axisY: {
+                            title: kpi_text,
+                            //prefix: "%",
+                            includeZero: true
+                        },
+                        data: [{
+                            type: "line",
+                            name: "B442W",
+                            xValueType: "dateTime",
+                            yValueFormatString: "#,##0.##",
+                            xValueFormatString: "DD MMM YYYY",
+                            dataPoints: data1,
+                        }]
+                    });
+                    chart.render();
+                };
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                $('#dropdown_cell').change(plot);
+                function plot() {
+
+
+                    $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
+                    var interval_text = $("#dropdown_DataInterval option:selected").text();
+
+                    $("#txtName2").val($("#dropdown_province option:selected").text());
+                    var province_text = $("#dropdown_province option:selected").text();
+
+                    $("#txtName3").val($("#dropdown_cell option:selected").text());
+                    var cell_text = $("#dropdown_cell option:selected").text();
+
+                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                    var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'dropdown_cellPost',
+                        data: { text: interval_text + "/" + province_text + "|"+kpi_text+"/" + cell_text },
+                        success : function(data)
+                        {
+                            if (data.success)
+                                Plot(data.result);
+                        }
+                    });
+                }
+
+                function Plot(data1) {
+                    $("#txtName1").val($("#dropdown_cell option:selected").text());
+                    var cell_text = $("#dropdown_cell option:selected").text();
+
+                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                    var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        animationEnabled: true,
+                        title: {
+                            text: cell_text
+                        },
+                        axisX: {
+                            valueFormatString: "DD MMM YYYY"
+                        },
+                        axisY: {
+                            title: kpi_text,
+                            //prefix: "%",
+                            includeZero: true
+                        },
+                        data: [{
+                            type: "line",
+                            name: "B442W",
+                            xValueType: "dateTime",
+                            yValueFormatString: "#,##0.##",
+                            xValueFormatString: "DD MMM YYYY",
+                            dataPoints: data1,
+                        }]
+                    });
+                    chart.render();
+                };
+
+
+
+
+            </script>
+        </head>
+        <body>
+            <div id="chartContainer" style="height: 600px; width: 100%;"></div>
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        </body>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+

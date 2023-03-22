@@ -1,0 +1,104 @@
+﻿@*@{
+        Layout = null;
+    }
+
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>AZ_WLL_KPI</title>
+    </head>
+    <body>
+        <div>
+            <h4>lk;kjk;</h4>
+        </div>
+    </body>
+    </html>*@
+
+
+
+
+
+@*Ajax JQuary for Load Data into DataBase*@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script>
+
+    function upload() {
+
+        if ($("#fileID").val() == '') {
+            alert('Please select a file.');
+            return false;
+        }
+        $("#txtName").val("");
+        var formData = new FormData();
+        var file = document.getElementById("fileID").files[0];
+        formData.append("MyFile", file);
+
+        $.ajax({
+            type: "POST",
+            url: 'Index_Post',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            cache: false,
+            success: function (response) {
+                var myhtml = '';
+                if (response.success) {
+                    $("#txtName").val("KPI is uploaded");
+                    myhtml = '<div class="alert alert-success">' + response.responseMessage + '</div>';
+                }
+                else {
+                    myhtml = '<div class="alert alert-danger">' + response.responseMessage + '</div>';
+                }
+                $("#myAlert").html(myhtml);
+                $("#myAlert").fadeIn(500).delay(3000).fadeOut(500);
+            },
+            error: function (error) {
+                $("#myAlert").html('<div class="alert alert-danger">' + error + '</div>');
+            }
+        });
+    };
+
+
+
+</script>
+
+
+<br />
+<br />
+
+
+
+
+
+@Html.TextBox("fileID", "", new { type = "file" })
+<br />
+
+<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        <input type="submit" onclick="upload()" class="btn btn-secondary" value="Upload KPI" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <input type="text" id="txtName" />
+    </div>
+
+</div>
+
+
+<br />
+
+
+<select id="dropdowntipo">
+    <option value="Exemplo1">Exemplo1</option>
+    <option value="Exemplo2">Exemplo2</option>
+    <option value="Exemplo3">Exemplo3</option>
+</select>
+
+
+
