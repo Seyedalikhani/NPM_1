@@ -28,11 +28,11 @@ namespace NPM_1.Controllers
         public ActionResult Contract_KPI()
         {
 
-      
 
 
 
-      
+
+
 
             return View();
         }

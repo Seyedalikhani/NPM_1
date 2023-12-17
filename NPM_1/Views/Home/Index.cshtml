@@ -2,48 +2,140 @@
     ViewBag.Title = "Home Page";
 }
 
-@*<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>*@
 
 
-<div>
-    <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">Welcome!</h4>
-        <p>This is the Web Based Facilities to Show and Check KPI of Mobile Network, Make Reports, Find Worst Cells and Analyse DataBase.</p>
-        <hr>
-        <p class="mb-0">NAK-NPM is going to digitize all activities based of future rules in Digital Word Class Communications.</p>
-    </div>
+<!DOCTYPE HTML>
+<html>
+<head>
+
+    <br>
+    <br />
 
 
-    <div>
-        <img src="~/images/NPM.png">
-    </div>
+    <script>
 
- </div>
+        window.onload = function () {
+
+            var dataPoints1 = [];
+
+            var chart1 = new CanvasJS.Chart("chartContainer1", {
+                zoomEnabled: true,
+                animationEnabled: true,
+                theme: "dark2",   // "light1", "light2", "dark1", "dark2"
+                title: {
+                    text: "Voice Traffic (MErlang)",
+                    fontSize: 20,
+                },
+                axisY: {
+                    maximum: 32,
+                    interval: 5,
+                    //title: "",
+                    //titleFontSize: 24,
+                    //prefix: "",
+                    //crosshair: {
+                    //    enabled: true,
+                    //    valueFormatString: "#,##0.##",
+                    //    snapToDataPoint: true
+                    //}
+                },
+                //axisX: {
+                //    crosshair: {
+                //        enabled: true,
+                //        snapToDataPoint: true
+                //    }
+                //},
+                data: [{
+                    type: "line",
+                    lineColor: "yellow",
+                    yValueFormatString: "#,##0.##",
+                    xValueFormatString: "MMM DD YYYY",
+                    dataPoints: dataPoints1
+                }]
+            });
+
+            function addData1(data) {
+                for (var i = 0; i < data.length; i++) {
+                    dataPoints1.push({
+                        x: new Date(data[i].x),
+                        y: data[i].y
+                    });
+                }
+                chart1.render();
+
+            }
+           
+            
+            var dataPoints2 = [];
+
+            var chart2 = new CanvasJS.Chart("chartContainer2", {
+                zoomEnabled: true,
+                animationEnabled: true,
+                theme: "dark2",   // "light1", "light2", "dark1", "dark2"
+                title: {
+                    text: "Data Traffic (PB)",
+                    fontSize: 20,
+                },
+                axisY: {
+                    maximum: 32,
+                    interval: 5,
+                    //title: "",
+                    //titleFontSize: 24,
+                    //prefix: "",
+                    //crosshair: {
+                    //    enabled: true,
+                    //    valueFormatString: "#,##0.##",
+                    //    snapToDataPoint: true
+                    //}
+                },
+                //axisX: {
+                //    crosshair: {
+                //        enabled: true,
+                //        snapToDataPoint: true
+                //    }
+                //},
+                data: [{
+                    type: "line",
+                    lineColor: "yellow",
+                    yValueFormatString: "#,##0.##",
+                    xValueFormatString: "MMM DD YYYY",
+                    dataPoints: dataPoints2
+                }]
+            });
+
+            function addData2(data) {
+                for (var i = 0; i < data.length; i++) {
+                    dataPoints2.push({
+                        x: new Date(data[i].x),
+                        y: data[i].z
+                    });
+                }
+                
+                chart2.render();
+            }
+
+            $.getJSON("/home/json", addData1);          
+            $.getJSON("/home/json", addData2);
+
+
+
+
+        }
+    </script>
+
+</head>
+
+<body>
+
+
+    <div id="chartContainer1" style="height: 470px; width: 100%;"></div><br>
+
+    <div id="chartContainer2" style="height: 470px; width: 100%; top: 2500px"></div>
+
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    @*<script src="~/Scripts/jquery-3.4.1.min.js"></script>*@
+    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
+</body>
+
 
 
