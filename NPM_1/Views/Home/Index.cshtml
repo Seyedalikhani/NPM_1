@@ -4,7 +4,21 @@
 
 
 
-<!DOCTYPE HTML>
+<body>
+
+    <div style="text-align: center;">
+        <img src="~/images/NPM.png" alt="Home Image" style="max-width: 150%; height: auto;" />
+    </div>
+
+    @*<div id="chartContainer1" style="height: 470px; width: 100%;"></div><br>
+
+    <div id="chartContainer2" style="height: 470px; width: 100%; top: 2500px"></div>
+
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>*@
+</body>
+
+<!--<!DOCTYPE HTML>
 <html>
 <head>
 
@@ -28,7 +42,7 @@
                 },
                 axisY: {
                     maximum: 32,
-                    interval: 5,
+                    interval: 2,
                     //title: "",
                     //titleFontSize: 24,
                     //prefix: "",
@@ -63,8 +77,8 @@
                 chart1.render();
 
             }
-           
-            
+
+
             var dataPoints2 = [];
 
             var chart2 = new CanvasJS.Chart("chartContainer2", {
@@ -77,7 +91,7 @@
                 },
                 axisY: {
                     maximum: 32,
-                    interval: 5,
+                    interval: 2,
                     //title: "",
                     //titleFontSize: 24,
                     //prefix: "",
@@ -109,11 +123,11 @@
                         y: data[i].z
                     });
                 }
-                
+
                 chart2.render();
             }
 
-            $.getJSON("/home/json", addData1);          
+            $.getJSON("/home/json", addData1);
             $.getJSON("/home/json", addData2);
 
 
@@ -132,10 +146,10 @@
     <div id="chartContainer2" style="height: 470px; width: 100%; top: 2500px"></div>
 
     <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>-->
     @*<script src="~/Scripts/jquery-3.4.1.min.js"></script>*@
     @*<script src="~/Scripts/bootstrap.min.js"></script>*@
-</body>
+<!--</body>-->
 
 
 

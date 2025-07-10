@@ -175,7 +175,7 @@
         <br />
         <br />
         <br />
-       
+
 
         @*@Html.Label("Site:")
         <select id="dropdown_bsc" name="dropdown_bsc"></select>
@@ -229,193 +229,208 @@
 
         @*<div style="height: 473px; width: 473px; background-color: #b6ff00; position: relative; top: 50px; left: 16px;">*@
 
-        <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
-        <style>
-            .map {
-                /*        height: 473px;
-                width: 100%;*/
-                height: 700px;
-                width: 1550px;
-            }
-        </style>
-        <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
 
-        <div id="map" class="map"></div>
-        <script type="text/javascript">
-            var map = new ol.Map({
-                target: 'map',
-                layers: [
-                    new ol.layer.Tile({
-                        source: new ol.source.OSM()
+
+
+        @helper AddMap()
+        {
+            <link rel="stylesheet" href="/Content/ol.css" type="text/css">
+            <style>
+                .map {
+                    height: 400px;
+                    width: 100%;
+                }
+            </style>
+            <script src="/Scripts/ol.js"></script>
+
+            <div id="map" class="map"></div>
+
+            <script type="text/javascript">
+                var map = new ol.Map({
+                    target: 'map',
+                    layers: [
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM()
+                        })
+                    ],
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([37.41, 8.82]),
+                        zoom: 4
                     })
-                ],
-                view: new ol.View({
-                    center: ol.proj.fromLonLat([55, 33]),
-                    zoom: 6
-                })
-            });
-        </script>
-    </div>
+                });
+            </script>
+        }
 
 
 
+
+
+
+
+
+        @*<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+            <style>
+                .map {
+                    /*        height: 473px;
+                        width: 100%;*/
+                    height: 700px;
+                    width: 1550px;
+                }
+            </style>
+            <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+
+            <div id="map" class="map"></div>
+            <script type="text/javascript">
+                var map = new ol.Map({
+                    target: 'map',
+                    layers: [
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM()
+                        })
+                    ],
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([55, 33]),
+                        zoom: 6
+                    })
+                });
+            </script>
+        </div>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!DOCTYPE html>
+        <html>
+        <head runat="server">
+            <title>Simple Map</title>
+            <meta name="viewport" content="initial-scale=1.0">
+            <meta charset="utf-8">
+            <style>
+                /* Always set the map height explicitly to define the size of the div element that contains the map. */
+                #map {
+                    height: 400px;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="map"></div>
+
+            <script>
+                function InitializeMap() {
+                    var latlng = new google.maps.LatLng(-34.397, 150.644);
+
+                    var myOptions = {
+                        zoom: 8,
+                        center: latlng,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+
+                    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+                }
+            </script>
+
+            <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=InitializeMap" async defer></script>
+        </body>
+    </html>
 
 
     @*<div style="width: 1075px; height: 600px; background-color: #FFCC66; position: relative; top: -790px; left: 513px;">*@
 
-        @{
-            Layout = null;
-        }
+    @{
+        Layout = null;
+    }
 
 
-        <html>
-        <head>
-            <script type="text/javascript">
+    <html>
+    <head>
+        <script type="text/javascript">
 
 
-                $('#dropdown_province').change(SendTextIntervalProvince);
-                function SendTextIntervalProvince() {
+            $('#dropdown_province').change(SendTextIntervalProvince);
+            function SendTextIntervalProvince() {
 
-                    $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
-                    var interval_text = $("#dropdown_DataInterval option:selected").text();
+                $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
+                var interval_text = $("#dropdown_DataInterval option:selected").text();
 
-                    $("#txtName2").val($("#dropdown_province option:selected").text());
-                    var province_text = $("#dropdown_province option:selected").text();
+                $("#txtName2").val($("#dropdown_province option:selected").text());
+                var province_text = $("#dropdown_province option:selected").text();
 
-                    $.ajax({
-                        type: "POST",
-                        url: 'dropdown_provincePost_Node',
-                        data: { text: interval_text + "/" + province_text },
+                $.ajax({
+                    type: "POST",
+                    url: 'dropdown_provincePost_Node',
+                    data: { text: interval_text + "/" + province_text },
 
-                        data1: "{}",
-                        success: function (data1) {
-                            var s = '<option value="-1">Please Select a Node</option>';
-                            for (var i = 0; i < data1.length; i++) {
-                                s += '<option value="' + '">' + data1[i].BSCName + '</option>';
-                            }
-                            $("#dropdown_bsc").html(s);
+                    data1: "{}",
+                    success: function (data1) {
+                        var s = '<option value="-1">Please Select a Node</option>';
+                        for (var i = 0; i < data1.length; i++) {
+                            s += '<option value="' + '">' + data1[i].BSCName + '</option>';
                         }
-                    });
+                        $("#dropdown_bsc").html(s);
+                    }
+                });
 
-                    $.ajax({
-                        type: "POST",
-                        url: 'dropdown_provincePost_Cell',
-                        data: { text: interval_text+"/"+province_text },
+                $.ajax({
+                    type: "POST",
+                    url: 'dropdown_provincePost_Cell',
+                    data: { text: interval_text + "/" + province_text },
 
-                        data1: "{}",
-                        success: function (data1) {
-                            var s = '<option value="-1">Please Select a Cell</option>';
-                            for (var i = 0; i < data1.length; i++) {
-                                s += '<option value="' + '">' + data1[i].CellName + '</option>';
-                            }
-                            $("#dropdown_cell").html(s);
+                    data1: "{}",
+                    success: function (data1) {
+                        var s = '<option value="-1">Please Select a Cell</option>';
+                        for (var i = 0; i < data1.length; i++) {
+                            s += '<option value="' + '">' + data1[i].CellName + '</option>';
                         }
-                    });
+                        $("#dropdown_cell").html(s);
+                    }
+                });
 
 
 
-                    $.ajax({
-                        type: "POST",
-                        url: 'dropdown_provincePost_KPI',
-                        data: { text: interval_text + "/" + province_text },
+                $.ajax({
+                    type: "POST",
+                    url: 'dropdown_provincePost_KPI',
+                    data: { text: interval_text + "/" + province_text },
 
-                        data1: "{}",
-                        success: function (data1) {
-                            var s = '<option value="-1">Please Select a KPI</option>';
-                            for (var i = 0; i < data1.length; i++) {
-                                s += '<option value="' + '">' + data1[i].KPIName + '</option>';
-                            }
-                            $("#dropdown_kpi").html(s);
+                    data1: "{}",
+                    success: function (data1) {
+                        var s = '<option value="-1">Please Select a KPI</option>';
+                        for (var i = 0; i < data1.length; i++) {
+                            s += '<option value="' + '">' + data1[i].KPIName + '</option>';
                         }
-                    });
+                        $("#dropdown_kpi").html(s);
+                    }
+                });
 
 
 
-                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
-                    var kpi_text = $("#dropdown_kpi option:selected").text();
+                $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                var kpi_text = $("#dropdown_kpi option:selected").text();
 
-                    $.ajax({
-                        type: "POST",
-                        url: 'dropdown_provincePost',
-                        data: { text: interval_text + "/" + province_text + "|" + kpi_text },
-                        success: function (data) {
-                            if (data.success)
-                                Plot(data.result);
-                        }
-                    });
-
-
-                    function Plot(data1) {
-                        $("#txtName1").val($("#dropdown_cell option:selected").text());
-                        var cell_text = $("#dropdown_cell option:selected").text();
-
-                        $("#txtName4").val($("#dropdown_kpi option:selected").text());
-                        var kpi_text = $("#dropdown_kpi option:selected").text();
-
-                        var chart = new CanvasJS.Chart("chartContainer", {
-                            animationEnabled: true,
-                            title: {
-                                text: province_text
-                            },
-                            axisX: {
-                                valueFormatString: "DD MMM YYYY"
-                            },
-                            axisY: {
-                                title: kpi_text,
-                                //prefix: "%",
-                                includeZero: true
-                            },
-                            data: [{
-                                type: "line",
-                                name: "B442W",
-                                xValueType: "dateTime",
-                                yValueFormatString: "#,##0.##",
-                                xValueFormatString: "DD MMM YYYY",
-                                dataPoints: data1,
-                            }]
-                        });
-                        chart.render();
-                    };
+                $.ajax({
+                    type: "POST",
+                    url: 'dropdown_provincePost',
+                    data: { text: interval_text + "/" + province_text + "|" + kpi_text },
+                    success: function (data) {
+                        if (data.success)
+                            Plot(data.result);
+                    }
+                });
 
 
-
-
-                }
-
-
-
-
-
-                $('#dropdown_kpi').change(plot1);
-                function plot1() {
-
-
-                    $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
-                    var interval_text = $("#dropdown_DataInterval option:selected").text();
-
-                    $("#txtName2").val($("#dropdown_province option:selected").text());
-                    var province_text = $("#dropdown_province option:selected").text();
-
-                    $("#txtName3").val($("#dropdown_cell option:selected").text());
+                function Plot(data1) {
+                    $("#txtName1").val($("#dropdown_cell option:selected").text());
                     var cell_text = $("#dropdown_cell option:selected").text();
-
-                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
-                    var kpi_text = $("#dropdown_kpi option:selected").text();
-
-                    $.ajax({
-                        type: "POST",
-                        url: 'dropdown_kpiPost',
-                        data: { text: interval_text + "/" + province_text + "|" + kpi_text },
-                        success: function (data) {
-                            if (data.success)
-                                Plot(data.result);
-                        }
-                    });
-                }
-
-                function Plot1(data1) {
-                    $("#txtName2").val($("#dropdown_province option:selected").text());
-                    var province_text = $("#dropdown_province option:selected").text();
 
                     $("#txtName4").val($("#dropdown_kpi option:selected").text());
                     var kpi_text = $("#dropdown_kpi option:selected").text();
@@ -448,6 +463,70 @@
 
 
 
+            }
+
+
+
+
+
+            $('#dropdown_kpi').change(plot1);
+            function plot1() {
+
+
+                $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
+                var interval_text = $("#dropdown_DataInterval option:selected").text();
+
+                $("#txtName2").val($("#dropdown_province option:selected").text());
+                var province_text = $("#dropdown_province option:selected").text();
+
+                $("#txtName3").val($("#dropdown_cell option:selected").text());
+                var cell_text = $("#dropdown_cell option:selected").text();
+
+                $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                $.ajax({
+                    type: "POST",
+                    url: 'dropdown_kpiPost',
+                    data: { text: interval_text + "/" + province_text + "|" + kpi_text },
+                    success: function (data) {
+                        if (data.success)
+                            Plot(data.result);
+                    }
+                });
+            }
+
+            function Plot1(data1) {
+                $("#txtName2").val($("#dropdown_province option:selected").text());
+                var province_text = $("#dropdown_province option:selected").text();
+
+                $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    title: {
+                        text: province_text
+                    },
+                    axisX: {
+                        valueFormatString: "DD MMM YYYY"
+                    },
+                    axisY: {
+                        title: kpi_text,
+                        //prefix: "%",
+                        includeZero: true
+                    },
+                    data: [{
+                        type: "line",
+                        name: "B442W",
+                        xValueType: "dateTime",
+                        yValueFormatString: "#,##0.##",
+                        xValueFormatString: "DD MMM YYYY",
+                        dataPoints: data1,
+                    }]
+                });
+                chart.render();
+            };
 
 
 
@@ -456,80 +535,83 @@
 
 
 
-                
-                $('#dropdown_cell').change(plot);
-                function plot() {
-
-
-                    $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
-                    var interval_text = $("#dropdown_DataInterval option:selected").text();
-
-                    $("#txtName2").val($("#dropdown_province option:selected").text());
-                    var province_text = $("#dropdown_province option:selected").text();
-
-                    $("#txtName3").val($("#dropdown_cell option:selected").text());
-                    var cell_text = $("#dropdown_cell option:selected").text();
-
-                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
-                    var kpi_text = $("#dropdown_kpi option:selected").text();
-
-                    $.ajax({
-                        type: "POST",
-                        url: 'dropdown_cellPost',
-                        data: { text: interval_text + "/" + province_text + "|"+kpi_text+"/" + cell_text },
-                        success : function(data)
-                        {
-                            if (data.success)
-                                Plot(data.result);
-                        }
-                    });
-                }
-
-                function Plot(data1) {
-                    $("#txtName1").val($("#dropdown_cell option:selected").text());
-                    var cell_text = $("#dropdown_cell option:selected").text();
-
-                    $("#txtName4").val($("#dropdown_kpi option:selected").text());
-                    var kpi_text = $("#dropdown_kpi option:selected").text();
-
-                    var chart = new CanvasJS.Chart("chartContainer", {
-                        animationEnabled: true,
-                        title: {
-                            text: cell_text
-                        },
-                        axisX: {
-                            valueFormatString: "DD MMM YYYY"
-                        },
-                        axisY: {
-                            title: kpi_text,
-                            //prefix: "%",
-                            includeZero: true
-                        },
-                        data: [{
-                            type: "line",
-                            name: "B442W",
-                            xValueType: "dateTime",
-                            yValueFormatString: "#,##0.##",
-                            xValueFormatString: "DD MMM YYYY",
-                            dataPoints: data1,
-                        }]
-                    });
-                    chart.render();
-                };
 
 
 
 
-            </script>
-        </head>
-        <body>
-            <div id="chartContainer" style="height: 600px; width: 100%;"></div>
-            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-        </body>
+
+            $('#dropdown_cell').change(plot);
+            function plot() {
+
+
+                $("#txtName1").val($("#dropdown_DataInterval option:selected").text());
+                var interval_text = $("#dropdown_DataInterval option:selected").text();
+
+                $("#txtName2").val($("#dropdown_province option:selected").text());
+                var province_text = $("#dropdown_province option:selected").text();
+
+                $("#txtName3").val($("#dropdown_cell option:selected").text());
+                var cell_text = $("#dropdown_cell option:selected").text();
+
+                $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                $.ajax({
+                    type: "POST",
+                    url: 'dropdown_cellPost',
+                    data: { text: interval_text + "/" + province_text + "|" + kpi_text + "/" + cell_text },
+                    success: function (data) {
+                        if (data.success)
+                            Plot(data.result);
+                    }
+                });
+            }
+
+            function Plot(data1) {
+                $("#txtName1").val($("#dropdown_cell option:selected").text());
+                var cell_text = $("#dropdown_cell option:selected").text();
+
+                $("#txtName4").val($("#dropdown_kpi option:selected").text());
+                var kpi_text = $("#dropdown_kpi option:selected").text();
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    title: {
+                        text: cell_text
+                    },
+                    axisX: {
+                        valueFormatString: "DD MMM YYYY"
+                    },
+                    axisY: {
+                        title: kpi_text,
+                        //prefix: "%",
+                        includeZero: true
+                    },
+                    data: [{
+                        type: "line",
+                        name: "B442W",
+                        xValueType: "dateTime",
+                        yValueFormatString: "#,##0.##",
+                        xValueFormatString: "DD MMM YYYY",
+                        dataPoints: data1,
+                    }]
+                });
+                chart.render();
+            };
 
 
 
-</div>
+
+        </script>
+    </head>
+    <body>
+        <div id="chartContainer" style="height: 600px; width: 100%;"></div>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    </body>
+
+
+
+    </div>
 
 
 

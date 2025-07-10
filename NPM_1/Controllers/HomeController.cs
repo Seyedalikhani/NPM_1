@@ -87,12 +87,9 @@ namespace NPM_1.Controllers
 
             //ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
 
-             return View();
+            return View();
 
 
-
-
-          
 
         }
 
@@ -101,41 +98,39 @@ namespace NPM_1.Controllers
 
         public ContentResult JSON()
         {
-            
 
+            string Server_Name = @"AHMAD\" + "SQLEXPRESS";
+            string DataBase_Name = "NAK";
 
-            string ConnectionString = @"Server=NAKPRG-NB1243; Database=Data; Trusted_Connection=True;";
+            string ConnectionString = @"Server=" + Server_Name + "; Database=" + DataBase_Name + "; Trusted_Connection=True;";
+
+            //string ConnectionString = @"Server=NAKPRG-NB1243; Database=Data; Trusted_Connection=True;";
             SqlConnection connection = new SqlConnection(ConnectionString);
             connection.Open();
 
-            string Cell_Select = "select * from Country_Traffic order by Date";
-            SqlCommand Cell_Select1 = new SqlCommand(Cell_Select, connection);
-            Cell_Select1.ExecuteNonQuery();
+            string Country_Traffic_str = "select * from Country_Traffic order by Date";
+            SqlCommand Country_Traffic_sql = new SqlCommand(Country_Traffic_str, connection);
+            Country_Traffic_sql.ExecuteNonQuery();
 
-            DataTable Cell_Select_Table = new DataTable();
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(Cell_Select1);
-            dataAdapter.Fill(Cell_Select_Table);
+            DataTable Country_Traffic_Table = new DataTable();
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(Country_Traffic_sql);
+            dataAdapter.Fill(Country_Traffic_Table);
 
             List<DataPoint> dataPoints1 = new List<DataPoint>();
-            List<DataPoint> dataPoints2 = new List<DataPoint>();
 
-            for (int k = 0; k <= Cell_Select_Table.Rows.Count - 1; k++)
+            for (int k = 0; k <= Country_Traffic_Table.Rows.Count - 1; k++)
             {
-                string date = Cell_Select_Table.Rows[k].ItemArray[0].ToString();
-                //DateTime dt = Convert.ToDateTime(date);
-                //double dt1 = dt.Ticks;
-                string Traffic_kpi = Cell_Select_Table.Rows[k].ItemArray[1].ToString();
+                string date = Country_Traffic_Table.Rows[k].ItemArray[0].ToString();
+
+                string Traffic_kpi = Country_Traffic_Table.Rows[k].ItemArray[1].ToString();
                 double kpi1 = Convert.ToDouble(Traffic_kpi);
 
-                string Data_kpi = Cell_Select_Table.Rows[k].ItemArray[2].ToString();
+                string Data_kpi = Country_Traffic_Table.Rows[k].ItemArray[2].ToString();
                 double kpi2 = Convert.ToDouble(Data_kpi);
-
-                // dataPoints.Add(new DataPoint(dt1, kpi1));
 
                 TimeSpan ts1 = DateTime.Parse(date) - DateTime.Parse("1970-01-01 00:00");
                 dataPoints1.Add(new DataPoint(Math.Truncate(ts1.TotalMilliseconds), kpi1,kpi2));
-                dataPoints1.Add(new DataPoint(Math.Truncate(ts1.TotalMilliseconds), kpi1,kpi2));
-                //dataPoints2.Add(new DataPoint(Math.Truncate(ts1.TotalMilliseconds), kpi2));
+
             }
 
             //ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
@@ -146,7 +141,7 @@ namespace NPM_1.Controllers
             JsonSerializerSettings _jsonSetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
             return Content(JsonConvert.SerializeObject(dataPoints1, _jsonSetting), "application/json");
 
-
+    
         }
 
 
@@ -163,12 +158,8 @@ namespace NPM_1.Controllers
                 this.z = z;
             }
 
-            //Explicitly setting the name to be used while serializing to JSON.
-            //[DataMember(Name = "x")]
+ 
             public Nullable<double> x = null;
-
-            //Explicitly setting the name to be used while serializing to JSON.
-            //[DataMember(Name = "y")]
             public Nullable<double> y = null;
             public Nullable<double> z = null;
         }
@@ -193,7 +184,7 @@ namespace NPM_1.Controllers
             return View();
         }
 
-        public ActionResult Traffic()
+        public ActionResult Contract()
         {
             return View();
         }

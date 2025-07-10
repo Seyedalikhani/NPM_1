@@ -1,82 +1,334 @@
-﻿
+﻿@*➤ Dropdown UI
+        Two dropdowns:
+            Province (pre-populated on page load)
+            City (dynamically filled via AJAX)
+
+    ➤ JavaScript Logic (using jQuery)
+        Province Change:
+            Triggers AJAX POST to GetCities, updates city dropdown.
+
+        City Change:
+            Sends both province and city to GetTrafficData.
+            Receives and parses JSON traffic data.
+            Converts timestamps to JS Date.
+            Splits data into two series: one for voice, one for data.
+
+    ➤ Charts (using CanvasJS)
+        Two line charts rendered side-by-side:
+            Chart 1: Voice Traffic (Erlang)
+            Chart 2: Data Traffic (GB)
+
+        Features: Zoom, animation, date formatting.*@
+
+
+
+
 @{
+    ViewBag.Title = "WPC Reports";
     Layout = null;
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>WPC_KPI</title>
+    <title>WPC Reports</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    @*<script src="js/jquery-3.6.0.min.js"></script>
+        <script src="js/jquery.canvasjs.min.js"></script>*@
+
+    <style>
+        body {
+            background-color: #ABBAEA;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        select {
+            margin-right: 15px;
+            padding: 5px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div> 
+
+    <h2>WPC Reports</h2>
+
+    <div style="margin-top: 20px;">
+        <div style="display: inline-block; margin-right: 20px;">
+            <label for="Dropdown_province">Province:</label><br />
+            @Html.DropDownList("Dropdown_province", new SelectList(ViewBag.ProvinceList), "Select Province", new { @id = "Dropdown_province" })
+        </div>
+
+        <div style="display: inline-block; margin-right: 20px;">
+            <label for="Dropdown_technology">Technology:</label><br />
+            @Html.DropDownList("Dropdown_technology", new SelectList(new[] { "2G", "3G", "4G", "5G" }), "Select Technology", new { @id = "Dropdown_technology" })
+        </div>
+
+        <div style="display: inline-block; margin-right: 20px;">
+            <label for="datePicker">Date:</label><br />
+            <input type="date" id="datePicker" />
+            <div id="selectedDatesContainer" style="margin-top: 5px;"></div>
+        </div>
+
+        <div style="display: inline-block; margin-right: 20px;">
+            <label for="Dropdown_interval">Interval:</label><br />
+            @Html.DropDownList("Dropdown_interval", new SelectList(new[] { "Daily", "BH" }), "Select Interval", new { @id = "Dropdown_interval" })
+        </div>
+
+        <div style="display: inline-block;">
+            <label for="Dropdown_kpi">KPI:</label><br />
+            <select id="Dropdown_kpi">
+                <option selected disabled>Select KPI</option>
+            </select>
+        </div>
+
+        <div style="display: inline-block; margin-right: 20px;">
+            <label for="Dropdown_threshold">Threshold:</label><br />
+            <select id="Dropdown_threshold">
+                <option selected disabled>Select Threshold</option>
+            </select>
+        </div>
+
+
+        <br />
+        <button id="insertBtn" style="margin-top: 10px; padding: 5px 10px;">Insert</button>
+
+        <div id="insertedList" style="margin-top: 20px;">
+            <h3>Inserted Filters:</h3>
+            <ul id="resultsList" style="list-style: none; padding-left: 0;"></ul>
+        </div>
+
+
+        <div id="insertedList" style="margin-top: 20px;">
+            <button id="fetchDataBtn" style="margin-top: 15px; padding: 10px 20px; background-color: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Fetch Data
+            </button>
+        </div>
+
+
     </div>
+
+
+
+    <script>
+        let selectedDates = [];
+
+        $('#datePicker').on('change', function () {
+            const selectedDate = $(this).val();
+
+            if (selectedDate && !selectedDates.includes(selectedDate)) {
+                selectedDates.push(selectedDate);
+                renderSelectedDates();
+            }
+
+            // Reset the picker after selection
+            $(this).val('');
+        });
+
+        function renderSelectedDates() {
+            const container = $('#selectedDatesContainer');
+            container.empty();
+
+            selectedDates.forEach((date, index) => {
+                const dateBox = $(`
+                        <div style="margin: 5px 0;">
+                            <input type="text" value="${date}" data-index="${index}" style="padding:5px;" />
+                            <button data-index="${index}" style="margin-left:5px;">✖</button>
+                        </div>
+                    `);
+
+                // Handle manual date editing
+                dateBox.find('input').on('change', function () {
+                    const idx = $(this).data('index');
+                    const newDate = $(this).val();
+
+                    if (!selectedDates.includes(newDate)) {
+                        selectedDates[idx] = newDate;
+                    } else {
+                        alert("This date is already selected.");
+                        $(this).val(selectedDates[idx]); // revert
+                    }
+
+                    renderSelectedDates();
+                });
+
+                // Handle deletion
+                dateBox.find('button').on('click', function () {
+                    const idx = $(this).data('index');
+                    selectedDates.splice(idx, 1);
+                    renderSelectedDates();
+                });
+
+                container.append(dateBox);
+            });
+        }
+
+
+        const kpiOptions = {
+            "2G": ["CDR >", "CSSR <", "IHSR <", "OHSR <", "RxQual_DL <", "RxQual_UL <", "SDCCH_Access_SR <", "SDCCH_Congestion >", "SDCCH_Drop_Rate >", "TCH_Assign_FR >", "TCH_Congestion >", "TCH_Traffic (Erlang) <=", "TCH_Availability <" ],
+            "3G": ["CS_RAB_Establish <", "CS_IRAT_HO_SR <", "CS_Drop_Rate >", "Soft_HO_SR <", "CS_RRC_SR <", "CS_MultiRAB_SR <", "Inter_Carrier_HO_SR <", "CS_Traffic (Erlang) <=", "Cell_Availability <", "HSDPA_SR <", "HSUPA_SR <", "DL_User_THR (Mbps) <", "UL_User_THR (Kbps) <", "HSDAP_Drop_Rate >", "HSUAP_Drop_Rate >", "PS_RRC_SR <", "Ps_RAB_Establish <", "PS_MultiRAB_Establish <", "PS_Drop_Rate >", "HSDPA_Cell_Change_SR <", "HS_Share_Payload <", "DL_Cell_THR (Mbps) <", "RSSI (dBm) >", "Average CQI <", "PS_Payload (GB) <="],
+            "4G": ["RRC_Connection_SR <", "ERAB_SR_Initial <", "ERAB_SR_Added <", "DL_THR (Mbps) <", "UL_THR (Mbps) <", "ERAB_Drop_Rate >", "S1_Signalling_SR <", "Intra_Freq_SR <", "Inter_Freq_SR <", "UL_Packet_Loss >", "UE_DL_Latency (ms) >", "Average CQI <", "PUCCH_RSSI (dBm) >", "PUSCH_RSSI (dBm) >", "Total_Paylaod (GB) <=", "Cell_Availability <"],
+            "5G": ["Total_Traffic_GB_MAC_Layer <=", "Total_SDU_Traffic_GB_RLC_Layer <=", "Downlink_Traffic_GB_RLC_Layer <=", "Uplink_Traffic_GB_RLC_Layer <=", "Downlink_User_Throughput_Mbps_RLC_Layer <", "Uplink_User_Throughput_Mbps_RLC_Layer <", "Average_Number_of_RRC_Connected_ENDC_NSA <=", "Max_Number_of_RRC_Connected_ENDC_NSA <=", "Cell_Availability_Rate <", "EN_DC_Setup_Sucess_Rate_Captured_in_gNodeb <", "Endc_drop_rate >", "Average_CQI_64QAM + 256QAM <"]
+        };
+
+        
+        
+
+        $(document).ready(function () {
+            $('#Dropdown_technology').on('change', function () {
+                const selectedTech = $(this).val();
+                const kpis = kpiOptions[selectedTech] || [];
+
+                const $kpiDropdown = $('#Dropdown_kpi');
+                $kpiDropdown.empty();
+                $kpiDropdown.append('<option selected disabled>Select KPI</option>');
+
+                kpis.forEach(kpi => {
+                    $kpiDropdown.append(`<option value="${kpi}">${kpi}</option>`);
+                });
+            });
+        });
+
+
+        const thresholdConfig = {
+            range_accessebility_retainability: ["CDR >", "CSSR <", "IHSR <", "OHSR <", "RxQual_DL <", "RxQual_UL <", "SDCCH_Access_SR <", "SDCCH_Congestion >", "SDCCH_Drop_Rate >", "TCH_Assign_FR >", "TCH_Congestion >", "TCH_Traffic (Erlang) <=", "TCH_Availability <", "CS_RAB_Establish <", "CS_IRAT_HO_SR <", "CS_Drop_Rate >", "Soft_HO_SR <", "CS_RRC_SR <", "CS_MultiRAB_SR <", "Inter_Carrier_HO_SR <", "CS_Traffic (Erlang) <=", "Cell_Availability <", "HSDPA_SR <", "HSUPA_SR <", "HSDAP_Drop_Rate >", "HSUAP_Drop_Rate >", "PS_RRC_SR <", "Ps_RAB_Establish <", "PS_MultiRAB_Establish <", "PS_Drop_Rate >", "HSDPA_Cell_Change_SR <", "HS_Share_Payload <", "PS_Payload (GB) <=", "RRC_Connection_SR <", "ERAB_SR_Initial <", "ERAB_SR_Added <", "ERAB_Drop_Rate >", "S1_Signalling_SR <", "Intra_Freq_SR <", "Inter_Freq_SR <", "Total_Paylaod (GB) <=", "Cell_Availability <", "Total_Traffic_GB_MAC_Layer <=", "Total_SDU_Traffic_GB_RLC_Layer <=", "Downlink_Traffic_GB_RLC_Layer <=", "Uplink_Traffic_GB_RLC_Layer <=", "Average_Number_of_RRC_Connected_ENDC_NSA <=", "Max_Number_of_RRC_Connected_ENDC_NSA <=", "Cell_Availability_Rate <", "EN_DC_Setup_Sucess_Rate_Captured_in_gNodeb <", "Endc_drop_rate >"],
+            range_Integrity: ["DL_User_THR (Mbps) <", "DL_Cell_THR (Mbps) <", "DL_THR (Mbps) <", "UL_THR (Mbps) <", "Downlink_User_Throughput_Mbps_RLC_Layer <", "Uplink_User_Throughput_Mbps_RLC_Layer <"],
+            range_RSSI: ["RSSI (dBm) >", "PUCCH_RSSI (dBm) >", "PUSCH_RSSI (dBm) >"],
+            range_CQI: ["Average CQI <", "Average CQI <", "Average_CQI_64QAM + 256QAM <"],
+            range_UL_Packet_Loss: ["UL_Packet_Loss >"],
+            range_Latency: ["UE_DL_Latency (ms) >"]
+        };
+
+        function generateRange(start, end, step) {
+            const result = [];
+            for (let i = start; i <= end; i += step) {
+                result.push(i.toFixed(1));
+            }
+            return result;
+        }
+
+        $(document).ready(function () {
+            $('#Dropdown_kpi').on('change', function () {
+                const selectedKPI = $(this).val();
+                let thresholds = [];
+
+                if (thresholdConfig.range_accessebility_retainability.includes(selectedKPI)) {
+                    thresholds = generateRange(0, 100, 0.5);
+                } else if (thresholdConfig.range_Integrity.includes(selectedKPI)) {
+                    thresholds = generateRange(0, 300, 1);
+                } else if (thresholdConfig.range_RSSI.includes(selectedKPI)) {
+                    thresholds = generateRange(-130, -50, 0.5);
+                } else if (thresholdConfig.range_CQI.includes(selectedKPI)) {
+                    thresholds = generateRange(0, 20, 0.5);
+                } else if (thresholdConfig.range_UL_Packet_Loss.includes(selectedKPI)) {
+                    thresholds = generateRange(0, 1000, 10);
+                } else if (thresholdConfig.range_Latency.includes(selectedKPI)) {
+                    thresholds = generateRange(0, 1000, 10);
+                }
+
+                const $thresholdDropdown = $('#Dropdown_threshold');
+                $thresholdDropdown.empty();
+                $thresholdDropdown.append('<option selected disabled>Select Threshold</option>');
+
+                thresholds.forEach(th => {
+                    $thresholdDropdown.append(`<option value="${th}">${th}</option>`);
+                });
+            });
+        });
+
+
+
+
+
+        $('#insertBtn').on('click', function () {
+            const province = $('#Dropdown_province').val();
+            const technology = $('#Dropdown_technology').val();
+            const interval = $('#Dropdown_interval').val();
+            const kpi = $('#Dropdown_kpi').val();
+            const threshold = $('#Dropdown_threshold').val();
+
+            if (!province || !technology || selectedDates.length === 0 || !interval || !kpi || !threshold) {
+                alert("Please select all required fields before inserting.");
+                return;
+            }
+
+            const dates = selectedDates.join(', ');
+            const entryText = `Province: ${province}, Technology: ${technology}, Dates: ${dates}, Interval: ${interval}, KPI: ${kpi}, Threshold: ${threshold}`;
+
+
+            const listItem = $(`
+    <div style="background-color: #f1f1f1; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span>${entryText}</span>
+        <button style="background-color: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;" class="removeEntry">✖</button>
+    </div>
+`);
+
+
+            listItem.find('.removeEntry').on('click', function () {
+                $(this).parent().remove();
+            });
+
+            $('#resultsList').append(listItem);
+        });
+
+
+
+
+
+
+
+        $('#fetchDataBtn').on('click', function () {
+            const filters = [];
+
+            $('#resultsList').children().each(function () {
+                filters.push($(this).find('span').text());
+            });
+
+            if (filters.length === 0) {
+                alert("Please insert at least one filter before fetching data.");
+                return;
+            }
+
+            // Send to server via AJAX
+            $.ajax({
+                url: '/YourController/FetchFilteredData',
+                type: 'POST',
+                data: JSON.stringify({ filters: filters }),
+                contentType: 'application/json',
+                success: function (response) {
+                    // Handle response (e.g., render chart or show table)
+                    console.log(response);
+                    alert("Data fetched successfully.");
+                },
+                error: function () {
+                    alert("Error fetching data.");
+                }
+            });
+        });
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>
 
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<script src="~/Scripts/bootstrap.min.js"></script>
-<link rel="stylesheet" href="~/Content/bootstrap.min.css">
-<br />
-<script>
-
-    function upload() {
-
-        if ($("#fileID").val() == '') {
-            alert('Please select a file.');
-            return false;
-        }
-        $("#txtName").val("");
-
-        var formData = new FormData();
-        var file = document.getElementById("fileID").files[0];
-        formData.append("MyFile", file);
-
-        $.ajax({
-            type: "POST",
-            url: 'Index_Post',
-            data: formData,
-            dataType: 'json',
-            contentType: false,
-            processData: false,
-            cache: false,
-            success: function (response) {
-                var myhtml = '';
-                if (response.success) {
-                    $("#txtName").val("KPI is uploaded");
-                    myhtml = '<div class="alert alert-success">' + response.responseMessage + '</div>';
-                }
-                else {
-                    myhtml = '<div class="alert alert-danger">' + response.responseMessage + '</div>';
-                }
-                $("#myAlert").html(myhtml);
-                $("#myAlert").fadeIn(500).delay(3000).fadeOut(500);
-            },
-            error: function (error) {
-                $("#myAlert").html('<div class="alert alert-danger">' + error + '</div>');
-            }
-        });
-    };
-
-
-
-</script>
-
-
-@Html.TextBox("fileID", "", new { type = "file" })
-<br />
-
-
-<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-        <input type="submit" onclick="upload()" class="btn btn-secondary" value="Upload KPI" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
-    <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <input type="text" id="txtName" />
-    </div>
-</div>
-
-
-<br />

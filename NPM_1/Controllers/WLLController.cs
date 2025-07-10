@@ -28,34 +28,36 @@ namespace NPM_1.Controllers
         {
 
 
-            string ConnectionString = @"Server=NAKPRG-NB1243; Database=Data; Trusted_Connection=True;";
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            connection.Open();
+            //string ConnectionString = @"Server=NAKPRG-NB1243; Database=Data; Trusted_Connection=True;";
+            //SqlConnection connection = new SqlConnection(ConnectionString);
+            //connection.Open();
 
-            string Cell_Select = "select* from[dbo].[KPI_AG_Daily] where[UserLabel]='AG1G1700A' order by Date";
-            SqlCommand Cell_Select1 = new SqlCommand(Cell_Select, connection);
-            Cell_Select1.ExecuteNonQuery();
+            //string Cell_Select = "select* from[dbo].[KPI_AG_Daily] where[UserLabel]='AG1G1700A' order by Date";
+            //SqlCommand Cell_Select1 = new SqlCommand(Cell_Select, connection);
+            //Cell_Select1.ExecuteNonQuery();
 
-            DataTable Cell_Select_Table = new DataTable();
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(Cell_Select1);
-            dataAdapter.Fill(Cell_Select_Table);
+            //DataTable Cell_Select_Table = new DataTable();
+            //SqlDataAdapter dataAdapter = new SqlDataAdapter(Cell_Select1);
+            //dataAdapter.Fill(Cell_Select_Table);
 
-            List<DataPoint> dataPoints = new List<DataPoint>();
+            //List<DataPoint> dataPoints = new List<DataPoint>();
 
-            for (int k = 0; k <= Cell_Select_Table.Rows.Count - 1; k++)
-            {
-                string date = Cell_Select_Table.Rows[k].ItemArray[2].ToString();
-                //DateTime dt = Convert.ToDateTime(date);
-                //double dt1 = dt.Ticks;
-                string kpi = Cell_Select_Table.Rows[k].ItemArray[13].ToString();
-                double kpi1 = Convert.ToDouble(kpi);
-                // dataPoints.Add(new DataPoint(dt1, kpi1));
+            //for (int k = 0; k <= Cell_Select_Table.Rows.Count - 1; k++)
+            //{
+            //    string date = Cell_Select_Table.Rows[k].ItemArray[2].ToString();
+            //    //DateTime dt = Convert.ToDateTime(date);
+            //    //double dt1 = dt.Ticks;
+            //    string kpi = Cell_Select_Table.Rows[k].ItemArray[13].ToString();
+            //    double kpi1 = Convert.ToDouble(kpi);
+            //    // dataPoints.Add(new DataPoint(dt1, kpi1));
 
-                TimeSpan ts1 = DateTime.Parse(date) - DateTime.Parse("1970-01-01 00:00");
-                dataPoints.Add(new DataPoint(Math.Truncate(ts1.TotalMilliseconds), kpi1));
-            }
+            //    TimeSpan ts1 = DateTime.Parse(date) - DateTime.Parse("1970-01-01 00:00");
+            //    dataPoints.Add(new DataPoint(Math.Truncate(ts1.TotalMilliseconds), kpi1));
+            //}
 
-            ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+            //ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+
+
 
             return View();
         }

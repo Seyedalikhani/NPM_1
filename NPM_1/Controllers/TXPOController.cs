@@ -8,10 +8,22 @@ using System.Data;
 using System.Data.SqlClient;
 using Excel = Microsoft.Office.Interop.Excel;
 using ClosedXML.Excel;
+//using DevExtreme.NETCore.Demos.Models;
+//using DevExtreme.NETCore.Demos.Models.DataGrid;
+//using DevExtreme.NETCore.Demos.Models.SampleData;
+//using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+
 
 
 namespace NPM_1.Controllers
 {
+
+
+
+
+
+
     public class TXPOController : Controller
     {
         // GET: TXPO

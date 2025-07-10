@@ -1,0 +1,303 @@
+﻿@*➤ Dropdown UI
+        Two dropdowns:
+            Province (pre-populated on page load)
+            City (dynamically filled via AJAX)
+
+    ➤ JavaScript Logic (using jQuery)
+        Province Change:
+            Triggers AJAX POST to GetCities, updates city dropdown.
+
+        City Change:
+            Sends both province and city to GetTrafficData.
+            Receives and parses JSON traffic data.
+            Converts timestamps to JS Date.
+            Splits data into two series: one for voice, one for data.
+
+    ➤ Charts (using CanvasJS)
+        Two line charts rendered side-by-side:
+            Chart 1: Voice Traffic (Erlang)
+            Chart 2: Data Traffic (GB)
+
+        Features: Zoom, animation, date formatting.*@
+
+
+
+
+@{
+    ViewBag.Title = "Traffic KPI Dashboard";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Traffic KPI</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    @*<script src="js/jquery-3.6.0.min.js"></script>
+        <script src="js/jquery.canvasjs.min.js"></script>*@
+
+    <style>
+        body {
+            background-color: #ABBAEA;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        select {
+            margin-right: 15px;
+            padding: 5px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Traffic KPI Dashboard</h2>
+
+    <div>
+        <label for="Dropdown_province">Province:</label>
+        @Html.DropDownList("Dropdown_province", new SelectList(ViewBag.ProvinceList), "Select Province", new { @id = "Dropdown_province" })
+
+        <label for="Dropdown_city">City:</label>
+        @Html.DropDownList("Dropdown_city", new SelectList(ViewBag.CityList), "Select City", new { @id = "Dropdown_city" })
+
+    </div>
+
+    <br />
+
+    <div id="chartContainer1" style="width: 49%; height: 300px; display: inline-block;"></div>
+    <div id="chartContainer2" style="width: 49%; height: 300px; display: inline-block;"></div>
+    <div id="chartContainer3" style="width: 49%; height: 300px; display: inline-block;"></div>
+    <div id="chartContainer4" style="width: 49%; height: 300px; display: inline-block;"></div>
+
+    <!-- Traffic Share Pie -->
+    <div id="ProvinceTrafficShareChart" style="width: 24.4%; height: 300px; display: inline-block;"></div>
+    <!-- Data Share Pie -->
+    <div id="ProvinceDataShareChart" style="width: 24.4%; height: 300px; display: inline-block;"></div>
+
+    <!-- Traffic Share Pie -->
+    <div id="CityTrafficShareChart" style="width: 24.4%; height: 300px; display: inline-block;"></div>
+    <!-- Data Share Pie -->
+    <div id="CityDataShareChart" style="width: 24.4%; height: 300px; display: inline-block;"></div>
+
+    <br />
+    <br />
+
+    <div>
+        <label for="Dropdown_site">Site:</label>
+        @Html.DropDownList("Dropdown_site", new SelectList(ViewBag.SiteList), "Select Site", new { @id = "Dropdown_site" })
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Render empty charts initially
+            renderChart("chartContainer1", "Voice Traffic (Erlang)", []);
+            renderChart("chartContainer3", "Data Traffic (GB)", []);
+            renderChart("chartContainer2", "Voice Traffic (Erlang)", []);
+            renderChart("chartContainer4", "Data Traffic (GB)", []);
+            renderPieChart("ProvinceTrafficShareChart", "Voice Share (%)", []);
+            renderPieChart("ProvinceDataShareChart", "Data Share (%)", [])
+            renderPieChart("CityTrafficShareChart", "Voice Share (%)", []);
+            renderPieChart("CityDataShareChart", "Data Share (%)", [])
+
+
+            // Province Dropdown
+            $('#Dropdown_province').change(function () {
+                var province = $(this).val();
+
+                if (!province) return;
+
+                // City list updated by province selection
+                $.ajax({
+                    url: '@Url.Action("GetCities", "Traffic")',
+                    type: 'POST',
+                    data: { selected_province: province },
+                    success: function (cities) {
+                        let $cityDropdown = $('#Dropdown_city');
+                        $cityDropdown.empty();
+                        $cityDropdown.append('<option value="">Select City</option>');
+                        $.each(cities, function (index, city) {
+                            $cityDropdown.append('<option value="' + city + '">' + city + '</option>');
+                        });
+                    }
+                });
+
+
+                // Site list updated by province selection
+                $.ajax({
+                    url: '@Url.Action("GetSites", "Traffic")',
+                    type: 'POST',
+                    data: { selected_province: province },
+                    success: function (sites) {
+                        let $siteDropdown = $('#Dropdown_site');
+                        $siteDropdown.empty();
+                        $siteDropdown.append('<option value="">Select Site</option>');
+                        $.each(sites, function (index, site) {
+                            $siteDropdown.append('<option value="' + site + '">' + site + '</option>');
+                        });
+                    }
+                });
+
+
+                // Voice and Data line chart per province
+                $.ajax({
+                    url: '@Url.Action("GetProvinceTrafficData", "Traffic")',
+                    type: 'POST',
+                    data: { province: province},
+                    success: function (data) {
+                        let dataPoints1 = [];
+                        let dataPoints2 = [];
+
+                        for (let i = 0; i < data.length; i++) {
+                            dataPoints1.push({
+                                x: new Date(data[i].x),
+                                y: data[i].y
+                            });
+                            dataPoints2.push({
+                                x: new Date(data[i].x),
+                                y: data[i].z
+                            });
+                        }
+
+                        let provinceName = $('#Dropdown_province option:selected').text();
+
+                        renderChart("chartContainer1", provinceName +" Voice Traffic (Erlang)", dataPoints1);
+                        renderChart("chartContainer3", provinceName +" Data Traffic (GB)", dataPoints2);
+                    }
+                });
+
+                // Voice and Data share pie chart per province
+                $.ajax({
+                    url: '@Url.Action("GetProvinceTrafficShare", "Traffic")',
+                    type: 'POST',
+                    data: { province: province},
+                    success: function (share) {
+
+                        let provinceName = $('#Dropdown_province option:selected').text();
+
+                        renderPieChart("ProvinceTrafficShareChart", provinceName+" Voice Share (%)", share.Traffic2GPercent, share.Traffic3GPercent, share.Traffic4GPercent, "2G Traffic", "3G Traffic", "4G Traffic");
+                        renderPieChart("ProvinceDataShareChart", provinceName +" Data Share (%)", share.Payload3GPercent, share.Payload4GPercent, share.Payload5GPercent, "3G Payload", "4G Payload", "5G Payload");
+                    }
+                });
+
+            });
+
+
+            // City Dropdown
+            $('#Dropdown_city').change(function () {
+                let province = $('#Dropdown_province').val();
+                let city = $(this).val();
+
+                if (!province || !city) return;
+
+                // Voice and Data line chart per city
+                $.ajax({
+                    url: '@Url.Action("GetCityTrafficData", "Traffic")',
+                    type: 'POST',
+                    data: { province: province, city: city },
+                    success: function (data) {
+                        let dataPoints1 = [];
+                        let dataPoints2 = [];
+
+                        for (let i = 0; i < data.length; i++) {
+                            dataPoints1.push({
+                                x: new Date(data[i].x),
+                                y: data[i].y
+                            });
+                            dataPoints2.push({
+                                x: new Date(data[i].x),
+                                y: data[i].z
+                            });
+                        }
+
+                        let cityName = $('#Dropdown_city option:selected').text();
+
+                        renderChart("chartContainer2", cityName+" Voice Traffic (Erlang)", dataPoints1);
+                        renderChart("chartContainer4", cityName+" Data Traffic (GB)", dataPoints2);
+                    }
+                });
+
+                // Voice and Data share pie chart per city
+                $.ajax({
+                    url: '@Url.Action("GetCityTrafficShare", "Traffic")',
+                    type: 'POST',
+                    data: { province: province, city: city },
+                    success: function (share) {
+
+                        let cityName = $('#Dropdown_city option:selected').text();
+
+                        renderPieChart("CityTrafficShareChart", cityName +" Voice Share (%)", share.Traffic2GPercent, share.Traffic3GPercent, share.Traffic4GPercent, "2G Traffic", "3G Traffic", "4G Traffic");
+                        renderPieChart("CityDataShareChart", cityName +" Data Share (%)", share.Payload3GPercent, share.Payload4GPercent, share.Payload5GPercent, "3G Payload", "4G Payload", "5G Payload");
+                    }
+                });
+
+
+            });
+
+
+            // LineChart Function
+            function renderChart(containerId, title, dataPoints) {
+                let chart = new CanvasJS.Chart(containerId, {
+                    zoomEnabled: true,
+                    animationEnabled: true,
+                    theme: "light2",
+                    title: {
+                        text: title,
+                        fontSize: 20
+                    },
+                    axisY: {
+                       // interval: 5,
+                      //  maximum: 40
+                    },
+                    data: [{
+                        type: "line",
+                        color: "blue",
+                        xValueType: "dateTime",
+                        xValueFormatString: "DD MMM YYYY",
+                        yValueFormatString: "#,##0.##",
+                        dataPoints: dataPoints
+                    }]
+                });
+                chart.render();
+            }
+
+
+
+            // PieChart Function
+            function renderPieChart(containerId, title, val1, val2, val3, label1, label2, label3) {
+                let chart = new CanvasJS.Chart(containerId, {
+                    animationEnabled: true,
+                    title: {
+                        text: title,
+                        fontSize: 18
+                    },
+                    data: [{
+                        type: "pie",
+                        startAngle: 240,
+                        yValueFormatString: "##0.00\"%\"",
+                        indexLabel: "{label} {y}",
+                        dataPoints: [
+                            { y: val1, label: label1 },
+                            { y: val2, label: label2 },
+                            { y: val3, label: label3 }
+                        ]
+                    }]
+                });
+
+                chart.render();
+            }
+
+
+
+
+
+        });
+    </script>
+
+</body>
+</html>
