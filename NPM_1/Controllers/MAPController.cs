@@ -24,16 +24,16 @@ namespace NPM_1.Controllers
 
 
 
-    public class TXPOController : Controller
+    public class MAPController : Controller
     {
-        // GET: TXPO
+        // GET: MAP
         public ActionResult Index()
         {
             return View();
         }
 
 
-        public ActionResult TXPO_Measurements()
+        public ActionResult MAP()
 
         {
             return View();

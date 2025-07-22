@@ -33,9 +33,9 @@
 <head>
     <title>Traffic KPI</title>
     @*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>*@
-    <script src="js/jquery-3.6.0.min.js"></script>
-        <script src="js/jquery.canvasjs.min.js"></script>
+        <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>*@
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery.canvasjs.min.js"></script>
 
     <style>
         body {
@@ -62,6 +62,7 @@
         <label for="Dropdown_province">Province:</label>
         @Html.DropDownList("Dropdown_province", new SelectList(ViewBag.ProvinceList), "Select Province", new { @id = "Dropdown_province" })
 
+
         <label for="Dropdown_city">City:</label>
         @Html.DropDownList("Dropdown_city", new SelectList(ViewBag.CityList), "Select City", new { @id = "Dropdown_city" })
 
@@ -74,6 +75,7 @@
     <div id="chartContainer3" style="width: 49%; height: 300px; display: inline-block;"></div>
     <div id="chartContainer4" style="width: 49%; height: 300px; display: inline-block;"></div>
 
+    <br />
     <!-- Traffic Share Pie -->
     <div id="ProvinceTrafficShareChart" style="width: 24.4%; height: 300px; display: inline-block;"></div>
     <!-- Data Share Pie -->
@@ -274,7 +276,7 @@
                     animationEnabled: true,
                     title: {
                         text: title,
-                        fontSize: 18
+                        fontSize: 16
                     },
                     data: [{
                         type: "pie",

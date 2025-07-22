@@ -24,7 +24,7 @@ namespace NPM_1.Controllers
                 conn.Open();
 
                 // Provinces
-                SqlCommand cmd1 = new SqlCommand("SELECT DISTINCT Province FROM SA_Province_Cont_MAP", conn);
+                SqlCommand cmd1 = new SqlCommand("SELECT DISTINCT Province FROM SA_Province_Cont_MAP where Province!='Iran'", conn);
                 SqlDataAdapter da1 = new SqlDataAdapter(cmd1);
                 DataTable dt1 = new DataTable();
                 da1.Fill(dt1);

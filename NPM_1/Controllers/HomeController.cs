@@ -190,7 +190,7 @@ namespace NPM_1.Controllers
         }
 
 
-        public ActionResult TXPO()
+        public ActionResult MAP()
         {
             return View();
         }
