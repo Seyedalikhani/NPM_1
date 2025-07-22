@@ -1,217 +1,150 @@
-﻿@*@{
-        Layout = null;
-    }
-
-    <!DOCTYPE html>
-
-    <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>AZ_WLL_KPI</title>
-    </head>
-    <body>
-        <div>
-            <h4>lk;kjk;</h4>
-        </div>
-    </body>
-    </html>*@
+﻿<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 
-@(Html.DevExtreme().DataGrid()
-    .ID("gridContainer")
-    .DataSource(d => d
-        .OData()
-        .Version(2)
-        .Url("https://js.devexpress.com/Demos/SalesViewer/odata/DaySaleDtoes")
-        .Key("Id")
-        .BeforeSend(@<text>
-            function(request) {
-                const year = new Date().getFullYear() - 1;
-                request.params.startDate = `${year}-05-10`;
-                request.params.endDate = `${year}-5-15`;
+
+
+<!-- Top panel with filters -->
+<div style="background-color: pink; padding: 10px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; font-size: 14px;">
+
+    <!-- Province -->
+    <div>
+        <label style="font-size: 16px;">Province:</label><br />
+        @Html.DropDownList(
+            "Dropdown_province",
+            new SelectList(new[] {
+                "ALBORZ", "ARDABIL", "BUSHEHR", "CHAHARMAHAL BAKHTIARI", "EAST AZERBAIJAN",
+                "ESFAHAN", "FARS", "GILAN", "GOLESTAN", "HAMEDAN", "HORMOZGAN", "ILAM",
+                "KERMAN", "KERMANSHAH", "KHORASAN RAZAVI", "KHOUZESTAN", "KOHGILUYEH AND BOYER AHMAD",
+                "KORDESTAN", "LORESTAN", "MARKAZI", "MAZANDARAN", "NORTH KHORASAN", "QAZVIN",
+                "QOM", "SEMNAN", "SISTAN VA BALUCHESTAN", "SOUTH KHORASAN", "TEHRAN",
+                "WEST AZERBAIJAN", "YAZD", "ZANJAN"
+            }),
+            "Select Province",
+            new
+            {
+                @id = "Dropdown_province",
+                @class = "form-control",
+                style = "width: 250px; font-size: 13px;" // Set your desired width here
             }
-        </text>)
-    )
-    .RemoteOperations(false)
-    .AllowColumnReordering(true)
-    .RowAlternationEnabled(true)
-    .Width("100%")
-    .ShowBorders(true)
-    .OnContentReady("contentReady")
-    .Paging(p => p.PageSize(10))
-    .Pager(p => p
-        .ShowPageSizeSelector(true)
-        .AllowedPageSizes(new[] { 10, 25, 50, 100 })
-    )
-    .SearchPanel(s => s
-        .Visible(true)
-        .HighlightCaseSensitive(true)
-    )
-    .GroupPanel(g => g.Visible(true))
-    .Grouping(g => g.AutoExpandAll(false))
-    .Columns(columns => {
-        columns.Add()
-            .DataField("Product")
-            .GroupIndex(0);
-
-        columns.Add()
-            .DataField("Amount")
-            .Caption("Sale Amount")
-            .DataType(GridColumnDataType.Number)
-            .Format(Format.Currency)
-            .Alignment(HorizontalAlignment.Right);
-
-        columns.Add()
-            .DataField("Discount")
-            .Caption("Discount %")
-            .DataType(GridColumnDataType.Number)
-            .Format(Format.Percent)
-            .Alignment(HorizontalAlignment.Right)
-            .AllowGrouping(false)
-            .CssClass("bullet")
-            .CellTemplate(@<text>
-                @(Html.DevExtreme().Bullet()
-                    .Value(new JS("value * 100"))
-                    .Size(s => s
-                        .Height(35)
-                        .Width(150)
-                    )
-                    .Margin(m => m
-                        .Top(5)
-                        .Bottom(0)
-                        .Left(5)
-                    )
-                    .ShowTarget(false)
-                    .ShowZeroLevel(true)
-                    .StartScaleValue(0)
-                    .EndScaleValue(100)
-                    .Tooltip(t => t
-                        .Enabled(true)
-                        .Font(f => f.Size(18))
-                        .PaddingTopBottom(2)
-                        .CustomizeTooltip("customizeTooltip")
-                    )
-                )
-            </text>);
-
-        columns.Add()
-            .DataField("SaleDate")
-            .DataType(GridColumnDataType.Date);
-
-        columns.Add()
-            .DataField("Region")
-            .DataType(GridColumnDataType.String);
-
-        columns.Add()
-            .DataField("Sector")
-            .DataType(GridColumnDataType.String);
-
-        columns.Add()
-            .DataField("Channel")
-            .DataType(GridColumnDataType.String);
-
-        columns.Add()
-            .DataField("Customer")
-            .DataType(GridColumnDataType.String)
-            .Width(150);
-    })
-)
-
-<script>
-    var collapsed = false;
-    function contentReady(e) {
-        if (!collapsed) {
-            collapsed = true;
-            e.component.expandRow(["EnviroCare"]);
-        }
-    }
-
-    function customizeTooltip(pointsInfo) {
-        return { text: parseInt(pointsInfo.originalValue) + "%" };
-    }
-</script>
+        )
 
 
+        @*<label for="Dropdown_province">Province:</label>
+        @Html.DropDownList("Dropdown_province", new SelectList(ViewBag.ProvinceList), "Select Province", new { @id = "Dropdown_province" })*@
 
-@*Ajax JQuary for Load Data into DataBase*@
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-<script>
-
-    function upload() {
-
-        if ($("#fileID").val() == '') {
-            alert('Please select a file.');
-            return false;
-        }
-        $("#txtName").val("");
-        var formData = new FormData();
-        var file = document.getElementById("fileID").files[0];
-        formData.append("MyFile", file);
-
-        $.ajax({
-            type: "POST",
-            url: 'Index_Post',
-            data: formData,
-            dataType: 'json',
-            contentType: false,
-            processData: false,
-            cache: false,
-            success: function (response) {
-                var myhtml = '';
-                if (response.success) {
-                    $("#txtName").val("KPI is uploaded");
-                    myhtml = '<div class="alert alert-success">' + response.responseMessage + '</div>';
-                }
-                else {
-                    myhtml = '<div class="alert alert-danger">' + response.responseMessage + '</div>';
-                }
-                $("#myAlert").html(myhtml);
-                $("#myAlert").fadeIn(500).delay(3000).fadeOut(500);
-            },
-            error: function (error) {
-                $("#myAlert").html('<div class="alert alert-danger">' + error + '</div>');
-            }
-        });
-    };
-
-
-
-</script>
-
-
-<br />
-<br />
-
-
-
-
-
-@Html.TextBox("fileID", "", new { type = "file" })
-<br />
-
-<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-        <input type="submit" onclick="upload()" class="btn btn-secondary" value="Upload KPI" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </div>
-    <div class="btn-group mr-2" role="group" aria-label="Second group">
-        <input type="text" id="txtName" />
+
+    <!-- Site Code -->
+    <div>
+        @* <label style="font-size: 16px;">Site Code:</label><br />*@
+        <label for="siteCodeDropdown">Site Code:</label><br />
+        @*<select id="siteCodeDropdown" class="form-control" style="font-size: 13px;">*@
+        @Html.DropDownList("siteCodeDropdown", new SelectList(ViewBag.SiteList), "Select Site", new { @id = "siteCodeDropdown" })
+        @*</select>*@
+    </div>
+
+
+
+
+    <!-- Band Info in 3 Rows -->
+    <div>
+        <label style="font-size: 16px;">Band:</label><br />
+        <div style="font-size: 13px;">
+            <!-- Row 1 -->
+            <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                <label><input type="checkbox" checked> G900</label>
+                <label><input type="checkbox" checked> G1800</label>
+            </div>
+
+            <!-- Row 2 -->
+            <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                <label><input type="checkbox" checked> U900</label>
+                <label><input type="checkbox" checked> U2100</label>
+            </div>
+
+            <!-- Row 3 -->
+            <div style="display: flex; gap: 10px;">
+                <label><input type="checkbox" checked> L1800</label>
+                <label><input type="checkbox" checked> L2100</label>
+                <label><input type="checkbox" checked> L2600</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Type in 3 Rows -->
+    <div>
+        <label style="font-size: 16px;">Site Type:</label><br />
+        <div style="display: flex; flex-direction: column; font-size: 13px;">
+            <label><input type="checkbox" checked> Macro</label>
+            <label><input type="checkbox" checked> Micro</label>
+            <label><input type="checkbox" checked> Pico</label>
+        </div>
+    </div>
+
+    <!-- Node Name -->
+    <div>
+        <label style="font-size: 16px;">Node Name:</label><br />
+        <select id="nodeDropdown" class="form-control" style="font-size: 13px;">
+            <option value="">--Select Node--</option>
+            <!-- Populate dynamically -->
+        </select>
+    </div>
+
+    <!-- Tool Buttons -->
+    <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
+        <button class="btn btn-primary" style="font-size: 13px;">Distance</button>
+        <button class="btn btn-primary" style="font-size: 13px;">Area</button>
+        <button class="btn btn-success" style="font-size: 13px;">Export</button>
     </div>
 
 </div>
 
 
-<br />
+
+<div id="map" style="height: 530px;"></div>
 
 
-<select id="dropdowntipo">
-    <option value="Exemplo1">Exemplo1</option>
-    <option value="Exemplo2">Exemplo2</option>
-    <option value="Exemplo3">Exemplo3</option>
-</select>
+<script>
+    var map = L.map('map').setView([35.7331085205078, 51.4947395324707], 13); // Tehran coords as example
 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Optional: Add a marker
+    //L.marker([35.7331085205078, 51.4947395324707]).addTo(map)
+    //    .bindPopup('Tehran')
+    //    .openPopup();
+
+
+
+$(document).ready(function () {
+    $('#Dropdown_province').change(function () {
+        var province = $(this).val();
+        if (!province) return;
+
+        $.ajax({
+            url: '@Url.Action("GetLocations", "MAP")',
+            type: 'POST',
+            data: { selected_province: province },
+            success: function (sites) {
+                let $$siteDropdown = $('#siteCodeDropdown');
+                $$siteDropdown.empty();
+                $$siteDropdown.append('<option value="">Select Site</option>');
+                $.each(sites, function (index, site) {
+                    $$siteDropdown.append('<option value="' + site + '">' + site + '</option>');
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", status, error);
+            }
+        });
+    });
+});
+
+
+</script>
 
 

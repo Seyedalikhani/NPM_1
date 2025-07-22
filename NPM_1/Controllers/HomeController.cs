@@ -96,53 +96,53 @@ namespace NPM_1.Controllers
 
 
 
-        public ContentResult JSON()
-        {
+        //public ContentResult JSON()
+        //{
 
-            string Server_Name = @"AHMAD\" + "SQLEXPRESS";
-            string DataBase_Name = "NAK";
+            //string Server_Name = @"AHMAD\" + "SQLEXPRESS";
+            //string DataBase_Name = "NAK";
 
-            string ConnectionString = @"Server=" + Server_Name + "; Database=" + DataBase_Name + "; Trusted_Connection=True;";
+            //string ConnectionString = @"Server=" + Server_Name + "; Database=" + DataBase_Name + "; Trusted_Connection=True;";
 
-            //string ConnectionString = @"Server=NAKPRG-NB1243; Database=Data; Trusted_Connection=True;";
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            connection.Open();
+            ////string ConnectionString = @"Server=NAKPRG-NB1243; Database=Data; Trusted_Connection=True;";
+            //SqlConnection connection = new SqlConnection(ConnectionString);
+            //connection.Open();
 
-            string Country_Traffic_str = "select * from Country_Traffic order by Date";
-            SqlCommand Country_Traffic_sql = new SqlCommand(Country_Traffic_str, connection);
-            Country_Traffic_sql.ExecuteNonQuery();
+            //string Country_Traffic_str = "select * from Country_Traffic order by Date";
+            //SqlCommand Country_Traffic_sql = new SqlCommand(Country_Traffic_str, connection);
+            //Country_Traffic_sql.ExecuteNonQuery();
 
-            DataTable Country_Traffic_Table = new DataTable();
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(Country_Traffic_sql);
-            dataAdapter.Fill(Country_Traffic_Table);
+            //DataTable Country_Traffic_Table = new DataTable();
+            //SqlDataAdapter dataAdapter = new SqlDataAdapter(Country_Traffic_sql);
+            //dataAdapter.Fill(Country_Traffic_Table);
 
-            List<DataPoint> dataPoints1 = new List<DataPoint>();
+            //List<DataPoint> dataPoints1 = new List<DataPoint>();
 
-            for (int k = 0; k <= Country_Traffic_Table.Rows.Count - 1; k++)
-            {
-                string date = Country_Traffic_Table.Rows[k].ItemArray[0].ToString();
+            //for (int k = 0; k <= Country_Traffic_Table.Rows.Count - 1; k++)
+            //{
+            //    string date = Country_Traffic_Table.Rows[k].ItemArray[0].ToString();
 
-                string Traffic_kpi = Country_Traffic_Table.Rows[k].ItemArray[1].ToString();
-                double kpi1 = Convert.ToDouble(Traffic_kpi);
+            //    string Traffic_kpi = Country_Traffic_Table.Rows[k].ItemArray[1].ToString();
+            //    double kpi1 = Convert.ToDouble(Traffic_kpi);
 
-                string Data_kpi = Country_Traffic_Table.Rows[k].ItemArray[2].ToString();
-                double kpi2 = Convert.ToDouble(Data_kpi);
+            //    string Data_kpi = Country_Traffic_Table.Rows[k].ItemArray[2].ToString();
+            //    double kpi2 = Convert.ToDouble(Data_kpi);
 
-                TimeSpan ts1 = DateTime.Parse(date) - DateTime.Parse("1970-01-01 00:00");
-                dataPoints1.Add(new DataPoint(Math.Truncate(ts1.TotalMilliseconds), kpi1,kpi2));
+            //    TimeSpan ts1 = DateTime.Parse(date) - DateTime.Parse("1970-01-01 00:00");
+            //    dataPoints1.Add(new DataPoint(Math.Truncate(ts1.TotalMilliseconds), kpi1,kpi2));
 
-            }
+            //}
 
-            //ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
-            //ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints2);
+            ////ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+            ////ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints2);
 
    
 
-            JsonSerializerSettings _jsonSetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
-            return Content(JsonConvert.SerializeObject(dataPoints1, _jsonSetting), "application/json");
+            //JsonSerializerSettings _jsonSetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
+            //return Content(JsonConvert.SerializeObject(dataPoints1, _jsonSetting), "application/json");
 
     
-        }
+        //}
 
 
 
