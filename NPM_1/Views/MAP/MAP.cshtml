@@ -30,18 +30,23 @@
         )
 
 
-        @*<label for="Dropdown_province">Province:</label>
-        @Html.DropDownList("Dropdown_province", new SelectList(ViewBag.ProvinceList), "Select Province", new { @id = "Dropdown_province" })*@
 
     </div>
 
     <!-- Site Code -->
     <div>
-        @* <label style="font-size: 16px;">Site Code:</label><br />*@
-        <label for="siteCodeDropdown">Site Code:</label><br />
-        @*<select id="siteCodeDropdown" class="form-control" style="font-size: 13px;">*@
-        @Html.DropDownList("siteCodeDropdown", new SelectList(ViewBag.SiteList), "Select Site", new { @id = "siteCodeDropdown" })
-        @*</select>*@
+        <label style="font-size: 16px;">Site:</label><br />
+        @Html.DropDownList(
+            "siteCodeDropdown",
+            new SelectList(ViewBag.SiteList),
+            "Select Site",
+            new
+            {
+                @id = "siteCodeDropdown",
+                @class = "form-control",
+                style = "width: 100px; font-size: 13px;" // Match Province dropdown
+            }
+        )
     </div>
 
 
@@ -84,7 +89,7 @@
 
     <!-- Node Name -->
     <div>
-        <label style="font-size: 16px;">Node Name:</label><br />
+        <label style="font-size: 16px;">Node:</label><br />
         <select id="nodeDropdown" class="form-control" style="font-size: 13px;">
             <option value="">--Select Node--</option>
             <!-- Populate dynamically -->
@@ -105,7 +110,13 @@
 <div id="map" style="height: 530px;"></div>
 
 
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/jquery.canvasjs.min.js"></script>
+
 <script>
+
+
     var map = L.map('map').setView([35.7331085205078, 51.4947395324707], 13); // Tehran coords as example
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -113,16 +124,10 @@
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Optional: Add a marker
-    //L.marker([35.7331085205078, 51.4947395324707]).addTo(map)
-    //    .bindPopup('Tehran')
-    //    .openPopup();
 
 
-
-
-    $(document).ready(function () {
-        $('#Dropdown_province').change(function () {
+    @*$(document).ready(function () {
+        $('#Dropdown_province').on('change', function () {
             var province = $(this).val();
             if (!province) return;
 
@@ -131,11 +136,15 @@
                 type: 'POST',
                 data: { selected_province: province },
                 success: function (sites) {
+                    console.log("Sites received:", sites);
                     let $siteDropdown = $('#siteCodeDropdown');
                     $siteDropdown.empty();
                     $siteDropdown.append('<option value="">Select Site</option>');
+
                     $.each(sites, function (index, site) {
-                        $siteDropdown.append('<option value="' + site + '">' + site + '</option>');
+                        $siteDropdown.append(
+                            '<option value="' + site.name + '" data-lat="' + site.lat + '" data-lng="' + site.lng + '">' + site.name + '</option>'
+                        );
                     });
                 },
                 error: function (xhr, status, error) {
@@ -143,9 +152,112 @@
                 }
             });
         });
+    });*@
+
+
+
+    let mapMarkers = []; // Store all site markers
+
+function clearMapMarkers() {
+    mapMarkers.forEach(marker => map.removeLayer(marker));
+    mapMarkers = [];
+}
+
+$(document).ready(function () {
+    $('#Dropdown_province').on('change', function () {
+        var province = $(this).val();
+        if (!province) return;
+
+        $.ajax({
+            url: '@Url.Action("GetLocations", "MAP")',
+            type: 'POST',
+            data: { selected_province: province },
+            success: function (sites) {
+                console.log("Sites received:", sites);
+
+                // Clear dropdown
+                let $siteDropdown = $('#siteCodeDropdown');
+                $siteDropdown.empty().append('<option value="">Select Site</option>');
+
+                // Clear previous markers
+                clearMapMarkers();
+
+                let bounds = [];
+
+                $.each(sites, function (index, site) {
+                    // Add to dropdown
+                    $siteDropdown.append(
+                        $('<option>', {
+                            value: site.name,
+                            text: site.name,
+                            'data-lat': site.lat,
+                            'data-lng': site.lng
+                        })
+                    );
+
+                    // Add marker to map
+                    if (site.lat && site.lng) {
+                        let marker = L.marker([site.lat, site.lng]).addTo(map)
+                            .bindPopup(site.name);
+                        mapMarkers.push(marker);
+                        bounds.push([site.lat, site.lng]);
+                    }
+                });
+
+                // Fit map to bounds if markers exist
+                if (bounds.length > 0) {
+                    map.fitBounds(bounds);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", status, error);
+            }
+        });
+    });
+});
+
+
+
+
+
+
+    let siteMarker; // Global marker variable
+
+    const redIcon = new L.Icon({
+        iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
     });
 
 
-</script>
 
+    $('#siteCodeDropdown').on('change', function () {
+        const selectedOption = $(this).find(':selected');
+        const lat = parseFloat(selectedOption.data('lat'));
+        const lng = parseFloat(selectedOption.data('lng'));
+
+        if (!lat || !lng) return;
+
+        // Remove previous red marker
+        if (siteMarker) {
+            map.removeLayer(siteMarker);
+        }
+
+        // Add red marker for selected site
+        siteMarker = L.marker([lat, lng], { icon: redIcon }).addTo(map)
+            .bindPopup(selectedOption.val())
+            .openPopup();
+
+        // Center the map
+        map.setView([lat, lng], 14);
+    });
+
+
+
+
+
+
+
+</script>
 

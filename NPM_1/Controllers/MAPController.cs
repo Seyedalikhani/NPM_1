@@ -68,25 +68,62 @@ namespace NPM_1.Controllers
         [HttpPost]
         public JsonResult GetLocations(string selected_province)
         {
-            List<string> sites = new List<string>();
+
+            //var siteList = new List<object>();
+            //string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            //using (SqlConnection conn = new SqlConnection(connectionString))
+            //{
+            //    conn.Open();
+            //    SqlCommand cmd = new SqlCommand("SELECT DISTINCT Location, Latitude, Longitude FROM ARAS_DB WHERE Province_EN = @p", conn);
+            //    cmd.Parameters.AddWithValue("@p", selected_province);
+            //    SqlDataReader reader = cmd.ExecuteReader();
+            //    while (reader.Read())
+            //    {
+            //        siteList.Add(new
+            //        {
+            //            name = reader["Location"].ToString(),
+            //            lat = Convert.ToDouble(reader["Latitude"]),
+            //            lng = Convert.ToDouble(reader["Longitude"])
+            //        });
+            //    }
+            //}
+
+            //return Json(siteList, JsonRequestBehavior.AllowGet);
+
+
+
+
+
+
+            var siteList = new List<object>();
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT DISTINCT Location FROM ARAS_DB WHERE Province_EN = @p", conn);
+                SqlCommand cmd = new SqlCommand("SELECT DISTINCT Location, Latitude, Longitude FROM ARAS_DB WHERE Province_EN = @p", conn);
                 cmd.Parameters.AddWithValue("@p", selected_province);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    sites.Add(reader.GetString(0));
+                    siteList.Add(new
+                    {
+                        name = reader["Location"].ToString(),
+                        lat = Convert.ToDouble(reader["Latitude"]),
+                        lng = Convert.ToDouble(reader["Longitude"])
+                    });
                 }
             }
 
-            return Json(sites);
+            return Json(siteList, JsonRequestBehavior.AllowGet);
+
+
+
+
+
+
         }
-
-
 
     }
 }
