@@ -199,5 +199,10 @@ namespace NPM_1.Controllers
         {
             return View();
         }
+
+        public ActionResult KPI0()
+        {
+            return View();
+        }
     }
 }

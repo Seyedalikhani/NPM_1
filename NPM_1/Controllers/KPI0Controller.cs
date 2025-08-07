@@ -15,16 +15,16 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace NPM_1.Controllers
 {
-    public class WLLController : Controller
+    public class KPI0Controller : Controller
     {
-        // GET: WLL
+        // GET: KPI0
         public ActionResult Index()
         {
             return View();
         }
 
 
-        public ActionResult WLL_KPI()
+        public ActionResult KPI0_KPI()
         {
 
 

@@ -12,9 +12,9 @@ using System.Web.Mvc;
 
 namespace NPM_1.Controllers
 {
-    public class TrafficController : Controller
+    public class DashboardsController : Controller
     {
-        public ActionResult Traffic_KPI()    // (GET)
+        public ActionResult Dashboards_KPI()    // (GET)
         {
             // Loads the initial view and populates dropdowns with provinces and corresponding cities.
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;

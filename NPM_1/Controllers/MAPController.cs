@@ -28,6 +28,7 @@ namespace NPM_1.Controllers
         //    return View();
         //}
 
+       
 
         public ActionResult MAP()
 
@@ -54,76 +55,51 @@ namespace NPM_1.Controllers
                 da2.Fill(dt2);
                 ViewBag.SiteList = dt2.AsEnumerable().Select(r => r[0].ToString()).ToList();
 
-
-
             }
-
-
-
             return View();
         }
+
+
 
 
 
         [HttpPost]
         public JsonResult GetLocations(string selected_province)
         {
-
-            //var siteList = new List<object>();
-            //string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
-            //using (SqlConnection conn = new SqlConnection(connectionString))
-            //{
-            //    conn.Open();
-            //    SqlCommand cmd = new SqlCommand("SELECT DISTINCT Location, Latitude, Longitude FROM ARAS_DB WHERE Province_EN = @p", conn);
-            //    cmd.Parameters.AddWithValue("@p", selected_province);
-            //    SqlDataReader reader = cmd.ExecuteReader();
-            //    while (reader.Read())
-            //    {
-            //        siteList.Add(new
-            //        {
-            //            name = reader["Location"].ToString(),
-            //            lat = Convert.ToDouble(reader["Latitude"]),
-            //            lng = Convert.ToDouble(reader["Longitude"])
-            //        });
-            //    }
-            //}
-
-            //return Json(siteList, JsonRequestBehavior.AllowGet);
-
-
-
-
-
-
             var siteList = new List<object>();
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT DISTINCT Location, Latitude, Longitude FROM ARAS_DB WHERE Province_EN = @p", conn);
+                string query = @"
+            SELECT CELLNAME, Location, Latitude, Longitude, AZIMUTH, Band
+            FROM ARAS_DB
+            WHERE Province_EN = @p order by Location, Band";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@p", selected_province);
+
+
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     siteList.Add(new
                     {
-                        name = reader["Location"].ToString(),
+                        cellName = reader["CELLNAME"].ToString(),
+                        location = reader["Location"].ToString(),
                         lat = Convert.ToDouble(reader["Latitude"]),
-                        lng = Convert.ToDouble(reader["Longitude"])
+                        lng = Convert.ToDouble(reader["Longitude"]),
+                        azimuth = Convert.ToInt32(reader["AZIMUTH"]),
+                        band = reader["Band"].ToString()   
                     });
                 }
             }
 
             return Json(siteList, JsonRequestBehavior.AllowGet);
-
-
-
-
-
-
         }
+
+
 
     }
 }

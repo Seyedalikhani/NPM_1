@@ -47,6 +47,7 @@
                 style = "width: 100px; font-size: 13px;" // Match Province dropdown
             }
         )
+
     </div>
 
 
@@ -111,126 +112,161 @@
 
 
 
+@*<div style="padding: 10px; font-size: 13px;">
+    <strong>Legend:</strong><br />
+    <span style="color:#e6194b;">■ G900</span>
+    <span style="color:#3cb44b;">■ G1800</span>
+    <span style="color:#4363d8;">■ U900</span>
+    <span style="color:#f58231;">■ U2100</span>
+    <span style="color:#911eb4;">■ L1800</span>
+    <span style="color:#46f0f0;">■ L2100</span>
+    <span style="color:#f032e6;">■ L2600</span>
+</div>*@
+
+
+
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
 <script src="~/Scripts/jquery.canvasjs.min.js"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
 <script>
-
-
-    var map = L.map('map').setView([35.7331085205078, 51.4947395324707], 13); // Tehran coords as example
+    var map = L.map('map').setView([35.7331085205078, 51.4947395324707], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
+    let mapMarkers = [];
+    let sectorLayersByBand = {
+        G900: [], G1800: [], U900: [], U2100: [], L1800: [], L2100: [], L2600: []
+    };
 
+    function clearMapMarkers() {
+        mapMarkers.forEach(marker => map.removeLayer(marker));
+        mapMarkers = [];
+    }
 
-    @*$(document).ready(function () {
+    function drawSector(lat, lng, azimuth, radius = 200, angle = 60, label = "", color = "red", band = "") {
+        const toRad = deg => deg * Math.PI / 180;
+        const points = [];
+        const start = azimuth - angle / 2;
+        const end = azimuth + angle / 2;
+        points.push([lat, lng]);
+        for (let a = start; a <= end; a += 5) {
+            let rad = toRad(a);
+            let dx = lat + (radius / 111320) * Math.cos(rad);
+            let dy = lng + (radius / (111320 * Math.cos(toRad(lat)))) * Math.sin(rad);
+            points.push([dx, dy]);
+        }
+        points.push([lat, lng]);
+
+        const sector = L.polygon(points, {
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.4
+        }).bindPopup(label + " (" + azimuth + "°)");
+
+        sector.addTo(map);
+
+        if (band && sectorLayersByBand[band]) {
+            sectorLayersByBand[band].push(sector);
+        }
+    }
+
+    $(document).ready(function () {
         $('#Dropdown_province').on('change', function () {
-            var province = $(this).val();
+            const province = $(this).val();
             if (!province) return;
 
             $.ajax({
                 url: '@Url.Action("GetLocations", "MAP")',
                 type: 'POST',
                 data: { selected_province: province },
-                success: function (sites) {
-                    console.log("Sites received:", sites);
-                    let $siteDropdown = $('#siteCodeDropdown');
-                    $siteDropdown.empty();
-                    $siteDropdown.append('<option value="">Select Site</option>');
-
-                    $.each(sites, function (index, site) {
-                        $siteDropdown.append(
-                            '<option value="' + site.name + '" data-lat="' + site.lat + '" data-lng="' + site.lng + '">' + site.name + '</option>'
-                        );
+                success: function (sectors) {
+                    map.eachLayer(function (layer) {
+                        if (layer instanceof L.Polygon || layer instanceof L.Marker) {
+                            map.removeLayer(layer);
+                        }
                     });
+                    mapMarkers = [];
+                    for (let band in sectorLayersByBand) {
+                        sectorLayersByBand[band].forEach(layer => map.removeLayer(layer));
+                        sectorLayersByBand[band] = [];
+                    }
+
+                    let $siteDropdown = $('#siteCodeDropdown');
+                    $siteDropdown.empty().append('<option value="">Select Site</option>');
+
+                    const bandStyles = {
+                        G900: { radius: 25, angle: 55, color: "#e6194b" },
+                        G1800: { radius: 30, angle: 50, color: "#3cb44b" },
+                        U900: { radius: 35, angle: 45, color: "#4363d8" },
+                        U2100: { radius: 40, angle: 40, color: "#f58231" },
+                        L1800: { radius: 45, angle: 35, color: "#911eb4" },
+                        L2100: { radius: 50, angle: 30, color: "#46f0f0" },
+                        L2600: { radius: 55, angle: 25, color: "#f032e6" },
+                    };
+
+                    let bounds = [];
+                    let addedLocations = new Set();
+
+                    sectors.forEach(sector => {
+                        const style = bandStyles[sector.band];
+                        if (!style) return;
+
+                        drawSector(sector.lat, sector.lng, sector.azimuth, style.radius, style.angle, sector.cellName, style.color, sector.band);
+
+                        if (!addedLocations.has(sector.location)) {
+                            addedLocations.add(sector.location);
+                            $siteDropdown.append(
+                                $('<option>', {
+                                    value: sector.location,
+                                    text: sector.location,
+                                    'data-lat': sector.lat,
+                                    'data-lng': sector.lng
+                                })
+                            );
+                        }
+
+                        bounds.push([sector.lat, sector.lng]);
+                    });
+
+                    if (bounds.length > 0) {
+                        map.fitBounds(bounds);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX error:", status, error);
                 }
             });
         });
-    });*@
 
-
-
-    let mapMarkers = []; // Store all site markers
-
-function clearMapMarkers() {
-    mapMarkers.forEach(marker => map.removeLayer(marker));
-    mapMarkers = [];
-}
-
-$(document).ready(function () {
-    $('#Dropdown_province').on('change', function () {
-        var province = $(this).val();
-        if (!province) return;
-
-        $.ajax({
-            url: '@Url.Action("GetLocations", "MAP")',
-            type: 'POST',
-            data: { selected_province: province },
-            success: function (sites) {
-                console.log("Sites received:", sites);
-
-                // Clear dropdown
-                let $siteDropdown = $('#siteCodeDropdown');
-                $siteDropdown.empty().append('<option value="">Select Site</option>');
-
-                // Clear previous markers
-                clearMapMarkers();
-
-                let bounds = [];
-
-                $.each(sites, function (index, site) {
-                    // Add to dropdown
-                    $siteDropdown.append(
-                        $('<option>', {
-                            value: site.name,
-                            text: site.name,
-                            'data-lat': site.lat,
-                            'data-lng': site.lng
-                        })
-                    );
-
-                    // Add marker to map
-                    if (site.lat && site.lng) {
-                        let marker = L.marker([site.lat, site.lng]).addTo(map)
-                            .bindPopup(site.name);
-                        mapMarkers.push(marker);
-                        bounds.push([site.lat, site.lng]);
-                    }
-                });
-
-                // Fit map to bounds if markers exist
-                if (bounds.length > 0) {
-                    map.fitBounds(bounds);
+        $('input[type=checkbox]').on('change', function () {
+            const band = $(this).parent().text().trim();
+            const isChecked = $(this).is(':checked');
+            if (!sectorLayersByBand[band]) return;
+            sectorLayersByBand[band].forEach(layer => {
+                if (isChecked) {
+                    map.addLayer(layer);
+                } else {
+                    map.removeLayer(layer);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX error:", status, error);
-            }
+            });
         });
     });
-});
 
-
-
-
-
-
-    let siteMarker; // Global marker variable
-
+    let siteMarker;
     const redIcon = new L.Icon({
-        iconUrl: "~/images/red-dot.png",
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
+        iconUrl: '/images/red-dot.png',
+        iconSize: [60, 60],
+        iconAnchor: [30, 60],
+        popupAnchor: [0, -60]
     });
-
-
 
     $('#siteCodeDropdown').on('change', function () {
         const selectedOption = $(this).find(':selected');
@@ -239,25 +275,14 @@ $(document).ready(function () {
 
         if (!lat || !lng) return;
 
-        // Remove previous red marker
         if (siteMarker) {
             map.removeLayer(siteMarker);
         }
 
-        // Add red marker for selected site
         siteMarker = L.marker([lat, lng], { icon: redIcon }).addTo(map)
             .bindPopup(selectedOption.val())
             .openPopup();
 
-        // Center the map
         map.setView([lat, lng], 14);
     });
-
-
-
-
-
-
-
 </script>
-

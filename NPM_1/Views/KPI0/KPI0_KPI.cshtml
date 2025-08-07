@@ -1,0 +1,596 @@
+﻿
+
+@{
+    ViewBag.Title = "KPI0";
+    Layout = null;
+}
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            background-color: #ABBAEA;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            height: 625px;
+        }
+
+        .left {
+            flex: 3;
+            margin-right: 20px;
+        }
+
+        .right {
+            flex: 10;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+        }
+
+
+        .box1 p {
+            font-size: 12px;
+            line-height: 1; /* You can try 1.6, 2, or any other value */
+            margin-left: 10px;
+        }
+
+        label[for="Dropdown_technology"] {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+
+        .box1 {
+            height: 100%;
+            position: relative;
+            line-height: 1;
+            padding-top: 10px; /* extra space for title */
+        }
+
+
+        button {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            width: 100px;
+        }
+
+        #uploadButton {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        #deleteButton {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        #selectButton {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        #siteListBox {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        input#newSiteInput {
+            margin-top: 10px;
+            padding: 6px;
+            width: 200px;
+        }
+
+        #deleteDateButton {
+            background-color: #FF8C00;
+            color: #fff;
+            padding: 5px 20px;
+            min-width: 170px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+
+
+        .box-heading {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background-color: #ffffff; /* same as box background */
+            padding: 2px 8px;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .box2 {
+            position: relative;
+            padding-top: 30px; /* extra space for title */
+        }
+
+        .box2 {
+            flex: none; /* Prevent flex from controlling height */
+            height: 200px; /* Initial height (can be adjusted) */
+            resize: vertical; /* 👈 Allow only vertical resizing */
+            margin-bottom: 20px;
+        }
+
+        .box3 {
+            position: relative;
+            padding-top: 30px; /* extra space for title */
+        }
+
+        .box3 {
+            flex: none; /* Prevent flex from controlling height */
+            height: 300px; /* Initial height (can be adjusted) */
+            resize: vertical; /* 👈 Allow only vertical resizing */
+            margin-bottom: 12px;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+            .button-row button {
+                padding: 6px 14px;
+                font-size: 14px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+        .button-run {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+            .button-run:hover {
+                background-color: #45a049;
+            }
+
+        .button-export {
+            background-color: #2196F3;
+            color: white;
+        }
+
+            .button-export:hover {
+                background-color: #1976D2;
+            }
+
+        h2 {
+            margin-top: 0;
+        }
+
+
+
+        .kpi-container {
+       /*     padding: 5px;
+            background-color: transparent;
+            font-size: 11px;*/
+            padding: 5px;
+            background-color: transparent;
+            font-size: 11px;
+            margin-top: -20px; /* Move container up */
+
+
+        }
+
+        .kpi-sections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: start;
+            
+        }
+
+        .kpi-box {
+            background-color: #ffccff;
+            padding: 6px;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 120px;
+            max-width: 170px;
+        }
+
+            .kpi-box h4 {
+                font-size: 12px;
+                margin: 0 0 4px 0;
+                padding-bottom: 2px;
+                border-bottom: 1px solid #999;
+            }
+
+        .kpi-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+            .kpi-group label {
+                flex: 1;
+                margin-right: 4px;
+                font-size: 10px;
+                line-height: 1;
+            }
+
+            .kpi-group input {
+                width: 35px;
+                height: 16px;
+                font-size: 10px;
+                padding: 1px 2px;
+            }
+
+
+
+
+    </style>
+</head>
+<body>
+    <h2>KPI0</h2>
+    <div class="main-container">
+        <div class="left">
+            <div class="box box1">
+                <div class="box-heading">Input</div>
+                @*<p>The Pattern for KPI0 is:</p>*@
+                <p style="font-size: 14px; font-weight: 600; ">The Sample of Sites for KPI0:</p>
+
+                <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      3G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        4G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5G</p>
+                <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TH0001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   TH1U0001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  TH1L0001&nbsp;&nbsp;&nbsp;&nbsp;TH1N0001</p>
+                <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KH0001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   KH2U0001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  KH2L0001&nbsp;&nbsp;&nbsp;&nbsp;KH2N0001</p>
+
+                <label for="Dropdown_technology">Technology:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                @Html.DropDownList("Dropdown_technology", new SelectList(new[] { "2G", "3G", "4G", "5G" }), "Select Technology", new { @id = "Dropdown_technology" })
+
+                <br /><br />
+
+                <label>
+                    <input type="checkbox" id="fromDatabase" name="sourceOption" onclick="toggleCheckbox(this)"> From Database
+                </label>
+
+                <br />
+                <br />
+
+                <label>
+                    <input type="checkbox" id="inputFile" name="sourceOption" onclick="toggleCheckbox(this)"> Input File
+                </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button id="uploadButton" type="button" style="display: none;">Upload</button>
+                <br />
+                <br />
+
+                <label for="siteListBox">Sites:</label><br />
+                <textarea id="siteListBox" rows="13" style="width: 300px; resize: none;"></textarea>
+
+                <br /><br />
+                <div style="display: flex; justify-content: space-between; width: 300px;">
+                    <button id="selectButton" type="button" onclick="selectAllSites()">Select All</button>
+                    <button id="deleteButton" type="button" onclick="deleteSelectedSites()">Delete</button>
+                </div>
+
+                <br />
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <label for="datePicker">Date:</label>
+                        <div id="selectedDatesContainer" style="margin-top: 5px;"></div>
+                    </div>
+                    <input type="date" id="datePicker" />
+                </div>
+
+                <label for="dateListBox"></label>
+                <textarea id="dateListBox" rows="4" style="width: 300px; resize: none;"></textarea><br />
+
+                @*<div style="display: flex; justify-content: space-between; width: 300px;">*@
+                <button id="deleteDateButton" type="button" onclick="deleteSelectedDates()">Delete Selected Date(s)</button>
+                @*</div>*@
+
+
+            </div>
+
+
+        </div>
+        <div class="right">
+            <div class="box box2">
+                <div class="box-heading">Thresholds</div>
+
+                <div class="kpi-container">
+                    <div class="kpi-sections">
+
+                        <!-- 2G -->
+                        <div class="kpi-box">
+                            <h4>2G:</h4>
+                            <div class="kpi-group"><label>Voice Drop Rate:</label><input type="text" value="3" /></div>
+                            <div class="kpi-group"><label>CSSR:</label><input type="text" value="92" /></div>
+                            <div class="kpi-group"><label>IHSR:</label><input type="text" value="92" /></div>
+                            <div class="kpi-group"><label>OHSR:</label><input type="text" value="92" /></div>
+                            <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
+                            <div class="kpi-group"><label>Traffic:</label><input type="text" value="0" /></div>
+                        </div>
+
+                        <!-- 3G CS -->
+                        <div class="kpi-box">
+                            <h4>3G CS:</h4>
+                            <div class="kpi-group"><label>Voice Drop Rate:</label><input type="text" value="2" /></div>
+                            <div class="kpi-group"><label>CS RAB Establish SR:</label><input type="text" value="97" /></div>
+                            <div class="kpi-group"><label>CS RRC Setup SR:</label><input type="text" value="97" /></div>
+                            <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
+                            <div class="kpi-group"><label>Voice Traffic:</label><input type="text" value="0" /></div>
+                        </div>
+
+
+
+                        <!-- 3G PS -->
+                        <div class="kpi-box">
+                            <h4>3G PS:</h4>
+                            <div class="kpi-group"><label>HSDPA Drop Rate:</label><input type="text" value="2" /></div>
+                            <div class="kpi-group"><label>PS RAB Establish SR:</label><input type="text" value="97" /></div>
+                            <div class="kpi-group"><label>PS RRC Setup SR:</label><input type="text" value="97" /></div>
+                            <div class="kpi-group"><label>Data Traffic:</label><input type="text" value="0" /></div>
+                            <div class="kpi-group"><label>RSSI (dBm):</label><input type="text" value="-90" /></div>
+                        </div>
+
+                        <!-- 4G -->
+                        <div class="kpi-box">
+                            <h4>4G:</h4>
+                            <div class="kpi-group"><label>DL THR (Mbps):</label><input type="text" value="8" /></div>
+                            <div class="kpi-group"><label>UL THR (Mbps):</label><input type="text" value="0.5" /></div>
+                            <div class="kpi-group"><label>ERAB Drop Rate:</label><input type="text" value="3" /></div>
+                            <div class="kpi-group"><label>ERAB Setup SR:</label><input type="text" value="97" /></div>
+                            <div class="kpi-group"><label>Intra Freq HO SR:</label><input type="text" value="92" /></div>
+                            <div class="kpi-group"><label>RRC Connection:</label><input type="text" value="97" /></div>
+                            <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
+                            <div class="kpi-group"><label>Data Traffic:</label><input type="text" value="0" /></div>
+                        </div>
+
+                        <!-- 5G -->
+                        <div class="kpi-box">
+                            <h4>5G:</h4>
+                            <div class="kpi-group"><label>DL THR (Mbps):</label><input type="text" value="50" /></div>
+                            <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
+                            <div class="kpi-group"><label>Data Traffic:</label><input type="text" value="0" /></div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <button id="resetButton" type="button" onclick="reset()"
+                        style="background-color: purple; color: white; float: right; font-size: 14px; padding: 4px 6px; cursor: pointer; position: relative; top: -29px; width: 80px;">
+                    Reset
+                </button>
+
+            </div>
+
+
+
+
+
+            <div class="box box3">
+                <div class="box-heading">Table</div>
+                <p>This is the bottom-right box (9x6).</p>
+            </div>
+            <!-- Buttons outside of Box 3 -->
+            <div class="button-row">
+                <button id="runBtn" class="button-run">Run</button>
+                <button class="button-export">Export</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function toggleCheckbox(clickedCheckbox) {
+            const checkboxes = document.getElementsByName('sourceOption');
+            checkboxes.forEach(cb => {
+                if (cb !== clickedCheckbox) cb.checked = false;
+            });
+
+            // Show/hide upload button based on Input File checkbox
+            const uploadBtn = document.getElementById('uploadButton');
+            uploadBtn.style.display = document.getElementById('inputFile').checked ? 'inline-block' : 'none';
+        }
+
+
+        function selectAllSites() {
+            const textarea = document.getElementById('siteListBox');
+            textarea.focus();
+            textarea.select();
+        }
+
+        function deleteSelectedSites() {
+            const textarea = document.getElementById('siteListBox');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+
+            if (start === end) return; // No selection
+
+            const value = textarea.value;
+
+            // Find the start of the line
+            const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+            // Find the end of the line
+            let lineEnd = value.indexOf('\n', end);
+            if (lineEnd === -1) lineEnd = value.length;
+
+            // Check if the whole line is selected
+            if (start === lineStart && end === lineEnd) {
+                // Delete entire line, including newline character
+                const before = value.substring(0, lineStart);
+                const after = value.substring(lineEnd + 1);
+                textarea.value = before + after;
+            } else {
+                // Just delete selected part
+                const before = value.substring(0, start);
+                const after = value.substring(end);
+                textarea.value = before + after;
+            }
+        }
+
+
+        const textarea = document.getElementById('siteListBox');
+
+        textarea.addEventListener('keydown', function (e) {
+            if (e.key === 'Delete') {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+
+                // Only proceed if there's an actual selection
+                if (start !== end) {
+                    e.preventDefault(); // Prevent default delete behavior
+
+                    const value = textarea.value;
+
+                    // Find the start of the line
+                    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+                    // Find the end of the line
+                    let lineEnd = value.indexOf('\n', end);
+                    if (lineEnd === -1) lineEnd = value.length;
+
+                    // Check if entire line is selected
+                    if (start === lineStart && end === lineEnd) {
+                        // Delete entire line, including trailing newline
+                        const before = value.substring(0, lineStart);
+                        const after = value.substring(lineEnd + 1);
+                        textarea.value = before + after;
+                        textarea.selectionStart = textarea.selectionEnd = lineStart;
+                    } else {
+                        // Partial selection — just delete selected part
+                        const before = value.substring(0, start);
+                        const after = value.substring(end);
+                        textarea.value = before + after;
+                        textarea.selectionStart = textarea.selectionEnd = start;
+                    }
+                }
+            }
+        });
+
+
+
+
+
+        document.getElementById('datePicker').addEventListener('change', function () {
+            const dateInput = this.value;
+            const textarea = document.getElementById('dateListBox');
+
+            if (dateInput) {
+                // Format or clean date if needed
+                const formattedDate = new Date(dateInput).toISOString().split('T')[0];
+
+                // Append date to the textarea (with newline)
+                textarea.value += formattedDate + '\n';
+
+                // Clear the date picker
+                this.value = '';
+            }
+        });
+
+
+
+
+
+        function deleteSelectedDates() {
+            const textarea = document.getElementById('dateListBox');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+
+            if (start === end) return; // No selection
+
+            const value = textarea.value;
+
+            // Find the start of the line
+            const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+            // Find the end of the line
+            let lineEnd = value.indexOf('\n', end);
+            if (lineEnd === -1) lineEnd = value.length;
+
+            // Check if the whole line is selected
+            if (start === lineStart && end === lineEnd) {
+                // Delete entire line, including newline character
+                const before = value.substring(0, lineStart);
+                const after = value.substring(lineEnd + 1);
+                textarea.value = before + after;
+            } else {
+                // Just delete selected part
+                const before = value.substring(0, start);
+                const after = value.substring(end);
+                textarea.value = before + after;
+            }
+        }
+
+
+
+        function reset() {
+            const inputs = document.querySelectorAll('.box2 input');
+            inputs.forEach(input => {
+                input.value = input.defaultValue;
+            });
+        }
+
+        //let selectedDates = [];
+
+        //$('#datePicker').on('change', function () {
+        //    const date = $(this).val();
+        //    if (date) {
+        //        selectedDates = [date]; // store selected date in array
+        //    } else {
+        //        selectedDates = [];
+        //    }
+        //});
+
+
+        $('#runBtn').on('click', function () {
+            const technology = $('#Dropdown_technology').val();
+            const selectedSite = $('#siteListBox').val();
+            const selectedDatesCount = $('#selectedDatesContainer').children().length;
+
+            if (!technology || !selectedSite || selectedDatesCount === 0) {
+                alert("Please select all required fields before inserting.");
+                return;
+            }
+
+            // Your execution logic here
+        });
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

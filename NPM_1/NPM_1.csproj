@@ -201,14 +201,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\FilterRequest.cs" />
     <Compile Include="Controllers\FromBodyAttribute.cs" />
-    <Compile Include="Controllers\TrafficController.cs" />
+    <Compile Include="Controllers\DashboardsController.cs" />
     <Compile Include="Controllers\BSC.cs" />
     <Compile Include="Controllers\DatabaseEntities.cs" />
     <Compile Include="Controllers\Department.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\MAPController.cs" />
-    <Compile Include="Controllers\WLLController.cs" />
+    <Compile Include="Controllers\KPI0Controller.cs" />
     <Compile Include="Controllers\WPCController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -265,9 +265,9 @@
     <Content Include="Views\Home\Reports.cshtml" />
     <Content Include="Views\Reports\NUR.cshtml" />
     <Content Include="Views\Reports\SMS.cshtml" />
-    <Content Include="Views\Traffic\Traffic_KPI.cshtml" />
+    <Content Include="Views\Dashboards\Dashboards_KPI.cshtml" />
     <Content Include="Views\MAP\MAP.cshtml" />
-    <Content Include="Views\WLL\WLL_KPI.cshtml" />
+    <Content Include="Views\KPI0\KPI0_KPI.cshtml" />
     <Content Include="Views\WPC\WPC_KPI.cshtml" />
     <Content Include="Views\WPC\Index_Post.cshtml" />
   </ItemGroup>
