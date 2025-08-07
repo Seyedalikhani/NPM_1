@@ -204,7 +204,7 @@
     <Compile Include="Controllers\DashboardsController.cs" />
     <Compile Include="Controllers\BSC.cs" />
     <Compile Include="Controllers\DatabaseEntities.cs" />
-    <Compile Include="Controllers\Department.cs" />
+    <Compile Include="Controllers\CRController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\MAPController.cs" />
@@ -270,6 +270,7 @@
     <Content Include="Views\KPI0\KPI0_KPI.cshtml" />
     <Content Include="Views\WPC\WPC_KPI.cshtml" />
     <Content Include="Views\WPC\Index_Post.cshtml" />
+    <Content Include="Views\CR\CR.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

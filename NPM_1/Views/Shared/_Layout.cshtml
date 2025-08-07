@@ -104,31 +104,32 @@
        
 
             @*Adding Div of NavBar from  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_dropdown_navbar*@ 
-            <div class="myNav_navbar">
-                <a>@Html.ActionLink("Home", "Index", "Home")</a>
-               
-                <div class="myNav_dropdown">
-                    <button class="myNav_dropbtn">
-                        Reports
-                        <i class="fa fa-caret-down"></i>
-                    </button>
-                    <div class="myNav_dropdown-content">
-                        @*<a href="#">Link 1</a>
-                        <a href="#">Link 2</a>
-                        <a href="#">Link 3</a>*@
+        <div class="myNav_navbar">
+            <a>@Html.ActionLink("Home", "Index", "Home")</a>
 
-                        <a>@Html.ActionLink("NUR", "NUR", "Reports")</a>
-                        <a>@Html.ActionLink("SMS", "SMS", "Reports")</a>
+            <div class="myNav_dropdown">
+                <button class="myNav_dropbtn">
+                    Reports
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="myNav_dropdown-content">
+                    @*<a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>*@
 
-                    </div>
+                    <a>@Html.ActionLink("NUR", "NUR", "Reports")</a>
+                    <a>@Html.ActionLink("SMS", "SMS", "Reports")</a>
+
                 </div>
-                <a>@Html.ActionLink("Dashboards", "Dashboards_KPI", "Dashboards")</a>
-                <a>@Html.ActionLink("KPI0", "KPI0_KPI", "KPI0")</a>
-                <a>@Html.ActionLink("MAP", "MAP", "MAP")</a>
-                <a>@Html.ActionLink("WPC", "WPC_KPI", "WPC")</a>
-                <a>@Html.ActionLink("About", "About", "Home")</a>
-                <a>@Html.ActionLink("Contact", "Contact", "Home")</a>
             </div>
+            <a>@Html.ActionLink("Dashboards", "Dashboards_KPI", "Dashboards")</a>
+            <a>@Html.ActionLink("KPI0", "KPI0_KPI", "KPI0")</a>
+            <a>@Html.ActionLink("CR", "CR_KPI", "CR")</a>
+            <a>@Html.ActionLink("MAP", "MAP", "MAP")</a>
+            <a>@Html.ActionLink("WPC", "WPC_KPI", "WPC")</a>
+            <a>@Html.ActionLink("About", "About", "Home")</a>
+            <a>@Html.ActionLink("Contact", "Contact", "Home")</a>
+        </div>
 
 
 

@@ -116,7 +116,7 @@
 
                 // City list updated by province selection
                 $.ajax({
-                    url: '@Url.Action("GetCities", "Traffic")',
+                    url: '@Url.Action("GetCities", "Dashboards")',
                     type: 'POST',
                     data: { selected_province: province },
                     success: function (cities) {
@@ -132,7 +132,7 @@
 
                 // Site list updated by province selection
                 $.ajax({
-                    url: '@Url.Action("GetSites", "Traffic")',
+                    url: '@Url.Action("GetSites", "Dashboards")',
                     type: 'POST',
                     data: { selected_province: province },
                     success: function (sites) {
@@ -148,7 +148,7 @@
 
                 // Voice and Data line chart per province
                 $.ajax({
-                    url: '@Url.Action("GetProvinceTrafficData", "Traffic")',
+                    url: '@Url.Action("GetProvinceTrafficData", "Dashboards")',
                     type: 'POST',
                     data: { province: province},
                     success: function (data) {
@@ -175,7 +175,7 @@
 
                 // Voice and Data share pie chart per province
                 $.ajax({
-                    url: '@Url.Action("GetProvinceTrafficShare", "Traffic")',
+                    url: '@Url.Action("GetProvinceTrafficShare", "Dashboards")',
                     type: 'POST',
                     data: { province: province},
                     success: function (share) {
@@ -199,7 +199,7 @@
 
                 // Voice and Data line chart per city
                 $.ajax({
-                    url: '@Url.Action("GetCityTrafficData", "Traffic")',
+                    url: '@Url.Action("GetCityTrafficData", "Dashboards")',
                     type: 'POST',
                     data: { province: province, city: city },
                     success: function (data) {
@@ -226,7 +226,7 @@
 
                 // Voice and Data share pie chart per city
                 $.ajax({
-                    url: '@Url.Action("GetCityTrafficShare", "Traffic")',
+                    url: '@Url.Action("GetCityTrafficShare", "Dashboards")',
                     type: 'POST',
                     data: { province: province, city: city },
                     success: function (share) {
