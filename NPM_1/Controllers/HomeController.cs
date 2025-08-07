@@ -204,5 +204,10 @@ namespace NPM_1.Controllers
         {
             return View();
         }
+
+        public ActionResult CR()
+        {
+            return View();
+        }
     }
 }
