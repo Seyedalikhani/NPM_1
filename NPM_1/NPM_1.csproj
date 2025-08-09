@@ -199,13 +199,13 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CRController.cs" />
     <Compile Include="Controllers\FilterRequest.cs" />
     <Compile Include="Controllers\FromBodyAttribute.cs" />
     <Compile Include="Controllers\DashboardsController.cs" />
     <Compile Include="Controllers\BSC.cs" />
-    <Compile Include="Controllers\DatabaseEntities.cs" />
-    <Compile Include="Controllers\CRController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Province.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\MAPController.cs" />
     <Compile Include="Controllers\KPI0Controller.cs" />
@@ -263,14 +263,16 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Reports.cshtml" />
-    <Content Include="Views\Reports\NUR.cshtml" />
-    <Content Include="Views\Reports\SMS.cshtml" />
+    <Content Include="Views\Reports\Swap.cshtml" />
+    <Content Include="Views\Reports\CustomerComplaint.cshtml" />
     <Content Include="Views\Dashboards\Dashboards_KPI.cshtml" />
     <Content Include="Views\MAP\MAP.cshtml" />
     <Content Include="Views\KPI0\KPI0_KPI.cshtml" />
     <Content Include="Views\WPC\WPC_KPI.cshtml" />
     <Content Include="Views\WPC\Index_Post.cshtml" />
     <Content Include="Views\CR\CR_KPI.cshtml" />
+    <Content Include="Views\Reports\Core.cshtml" />
+    <Content Include="Views\Reports\KML.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

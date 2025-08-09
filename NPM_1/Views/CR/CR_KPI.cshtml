@@ -1,6 +1,5 @@
 ﻿
 
-
 @{
     ViewBag.Title = "CR";
     Layout = null;
@@ -9,7 +8,7 @@
 
 
 
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -255,9 +254,9 @@
     <div class="main-container">
         <div class="left">
             <div class="box box1">
-                <div class="box-heading">Input</div>
+                <div class="box-heading">Input</div>-->
                 @*<p>The Pattern for KPI0 is:</p>*@
-                <p style="font-size: 14px; font-weight: 600; ">The Sample of Sites for KPI0:</p>
+                <!--<p style="font-size: 14px; font-weight: 600; ">The Sample of Sites for KPI0:</p>
 
                 <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      3G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        4G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5G</p>
                 <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TH0001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   TH1U0001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  TH1L0001&nbsp;&nbsp;&nbsp;&nbsp;TH1N0001</p>
@@ -301,14 +300,14 @@
                 </div>
 
                 <label for="dateListBox"></label>
-                <textarea id="dateListBox" rows="4" style="width: 300px; resize: none;"></textarea><br />
+                <textarea id="dateListBox" rows="4" style="width: 300px; resize: none;"></textarea><br />-->
 
                 @*<div style="display: flex; justify-content: space-between; width: 300px;">*@
-                <button id="deleteDateButton" type="button" onclick="deleteSelectedDates()">Delete Selected Date(s)</button>
+                <!--<button id="deleteDateButton" type="button" onclick="deleteSelectedDates()">Delete Selected Date(s)</button>-->
                 @*</div>*@
 
 
-            </div>
+            <!--</div>
 
 
         </div>
@@ -317,10 +316,10 @@
                 <div class="box-heading">Thresholds</div>
 
                 <div class="kpi-container">
-                    <div class="kpi-sections">
+                    <div class="kpi-sections">-->
 
                         <!-- 2G -->
-                        <div class="kpi-box">
+                        <!--<div class="kpi-box">
                             <h4>2G:</h4>
                             <div class="kpi-group"><label>Voice Drop Rate:</label><input type="text" value="3" /></div>
                             <div class="kpi-group"><label>CSSR:</label><input type="text" value="92" /></div>
@@ -328,32 +327,32 @@
                             <div class="kpi-group"><label>OHSR:</label><input type="text" value="92" /></div>
                             <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
                             <div class="kpi-group"><label>Traffic:</label><input type="text" value="0" /></div>
-                        </div>
+                        </div>-->
 
                         <!-- 3G CS -->
-                        <div class="kpi-box">
+                        <!--<div class="kpi-box">
                             <h4>3G CS:</h4>
                             <div class="kpi-group"><label>Voice Drop Rate:</label><input type="text" value="2" /></div>
                             <div class="kpi-group"><label>CS RAB Establish SR:</label><input type="text" value="97" /></div>
                             <div class="kpi-group"><label>CS RRC Setup SR:</label><input type="text" value="97" /></div>
                             <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
                             <div class="kpi-group"><label>Voice Traffic:</label><input type="text" value="0" /></div>
-                        </div>
+                        </div>-->
 
 
 
                         <!-- 3G PS -->
-                        <div class="kpi-box">
+                        <!--<div class="kpi-box">
                             <h4>3G PS:</h4>
                             <div class="kpi-group"><label>HSDPA Drop Rate:</label><input type="text" value="2" /></div>
                             <div class="kpi-group"><label>PS RAB Establish SR:</label><input type="text" value="97" /></div>
                             <div class="kpi-group"><label>PS RRC Setup SR:</label><input type="text" value="97" /></div>
                             <div class="kpi-group"><label>Data Traffic:</label><input type="text" value="0" /></div>
                             <div class="kpi-group"><label>RSSI (dBm):</label><input type="text" value="-90" /></div>
-                        </div>
+                        </div>-->
 
                         <!-- 4G -->
-                        <div class="kpi-box">
+                        <!--<div class="kpi-box">
                             <h4>4G:</h4>
                             <div class="kpi-group"><label>DL THR (Mbps):</label><input type="text" value="8" /></div>
                             <div class="kpi-group"><label>UL THR (Mbps):</label><input type="text" value="0.5" /></div>
@@ -363,10 +362,10 @@
                             <div class="kpi-group"><label>RRC Connection:</label><input type="text" value="97" /></div>
                             <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
                             <div class="kpi-group"><label>Data Traffic:</label><input type="text" value="0" /></div>
-                        </div>
+                        </div>-->
 
                         <!-- 5G -->
-                        <div class="kpi-box">
+                        <!--<div class="kpi-box">
                             <h4>5G:</h4>
                             <div class="kpi-group"><label>DL THR (Mbps):</label><input type="text" value="50" /></div>
                             <div class="kpi-group"><label>Availability:</label><input type="text" value="99" /></div>
@@ -391,9 +390,9 @@
             <div class="box box3">
                 <div class="box-heading">Table</div>
                 <p>This is the bottom-right box (9x6).</p>
-            </div>
+            </div>-->
             <!-- Buttons outside of Box 3 -->
-            <div class="button-row">
+            <!--<div class="button-row">
                 <button id="runBtn" class="button-run">Run</button>
                 <button class="button-export">Export</button>
             </div>
@@ -587,4 +586,4 @@
 
 
 </body>
-</html>
+</html>-->
